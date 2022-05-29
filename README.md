@@ -25,6 +25,8 @@ LibraryInfoManager
 
 ## Table Structure
 
+> The Bold properties are primary keys. And the Italic properties are foreign keys.
+
  - Book(**ISBN**, name, type, author, location, status, _PublisherID_)
  - Reader(**ReaderID**, name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
  - Admin(**WorkID**, user_name, name, password)
