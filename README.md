@@ -25,14 +25,12 @@ LibraryInfoManager
 
 ## Table Structure
 
-$$
-Book(\textbf{\mathrm{ISBN}}, name, type, author, location, status, \textit{PublisherID}) \\
-Reader() \\
-Admin() \\
-Publisher() \\
-Borrow() \\
-Manage()
-$$
+ - Book(**ISBN**, name, type, author, location, status, _PublisherID_)
+ - Reader(**ReaderID**, name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
+ - Admin(**WorkID**, user_name, name, password)
+ - Publisher(**PublisherID**, publisher_name)
+ - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
+ - Manage(**OperationID**, _WorkID_, _ISBN_, type, time)
 
 ## Usage
 
