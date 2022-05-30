@@ -46,6 +46,7 @@ LibraryInfoManager
 **What's the Credit used for?**:
 
 The credit can effect the max count of book(s) you can borrow and the longest time you can borrow book(s) for as well.
+
 $$
 USER_MAX_COUNT = \lfloor \frac{credit}{100} \times MAX_COUNT \rfloor
 USER_LONGEST_TIME = \lfloor \frac{credit}{100} \times LONGEST_TIME \rfloor
