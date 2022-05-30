@@ -1,7 +1,3 @@
-drop database LIMS if exists LIMS;
-
-create database LIMS CHARACTER SET utf8 COLLATE utf8_general_ci;
-
 create table Publisher (
     PublisherID int,
     publisher_name varchar(40),
