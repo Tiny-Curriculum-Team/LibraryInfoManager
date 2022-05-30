@@ -20,3 +20,11 @@ def disconnect_db(db):
     cursor = db.cursor()
     cursor.close()
     db.close()
+
+
+def execute_sql_script(cursor, file_path: str):
+    with open(file_path, 'r') as f:
+        sql_list = f.read().split(';')[:-1]
+        for sql in sql_list:
+            cursor.execute(sql)
+

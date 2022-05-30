@@ -29,9 +29,9 @@ LibraryInfoManager
 > The Bold properties are primary keys. And the Italic properties are foreign keys.
 
 - Publisher(**PublisherID**, publisher_name)
-- Book(**ISBN**, name, type, author, location, status, _PublisherID_)
-- Reader(**ReaderID**, name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
-- Admin(**WorkID**, user_name, name, password, tel)
+- Book(**ISBN**, book_name, book_type, author, location, status, _PublisherID_)
+- Reader(**ReaderID**, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
+- Admin(**WorkID**, admin_name, user_name, password, tel)
 - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
 - Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
 

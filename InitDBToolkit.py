@@ -1,5 +1,5 @@
 from os.path import join
-from lib.utils import connect_to_db, disconnect_db
+from lib.utils import connect_to_db, disconnect_db, execute_sql_script
 
 
 def check_existence_of_database():
@@ -16,8 +16,8 @@ def init_db():
     check_existence_of_database()
     database_connection = connect_to_db(database='LIMS')
     cursor = database_connection.cursor()
-    with open(join('./SQLs', 'InitDatabase.sql'), 'r') as f:
-        cursor.execute(f.read())
+    execute_sql_script(cursor, join('./SQLs', 'InitDatabase.sql'))
+    database_connection.commit()
     disconnect_db(database_connection)
 
 
