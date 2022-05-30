@@ -14,13 +14,14 @@ LibraryInfoManager
 ├── ConnectionTemplate.py
 ├── InitDBToolkit.py
 ├── lib
-│   ├── SQLs.py
 │   └── utils.py
 ├── LICENSE
 ├── README.md
-└── requirements.txt
+├── requirements.txt
+└── SQLs
+    └── InitDatabase.sql
 
-1 directory, 7 files
+2 directories, 7 files
 ```
 
 ## Table Structure
