@@ -1,25 +1,18 @@
-from lib.utils import connect2db, disconnect_db
-from lib.SQLs import *
-
-SQLs = [
-    create_book_table_sql,
-    create_reader_table_sql,
-    create_admin_table_sql,
-    create_publisher_table_sql,
-    create_borrow_table_sql,
-    create_manage_table_sql,
-]
+from os import listdir
+from os.path import join
+from lib.utils import connect_to_db, disconnect_db
 
 
 def init_db():
-    database_connection = connect2db()
+    database_connection = connect_to_db()
     db_cursor = database_connection.cursor()
-    for sql in SQLs:
+    with open(join('SQLs', 'InitDatabase.sql'), 'r') as f:
         try:
-            db_cursor.execute(sql)
+            db_cursor.execute(f.read())
         except Exception as e:
             print("Initialization Failed!")
             print(e)
+    database_connection.commit()
     disconnect_db(database_connection)
 
 

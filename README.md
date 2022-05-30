@@ -27,21 +27,21 @@ LibraryInfoManager
 
 > The Bold properties are primary keys. And the Italic properties are foreign keys.
 
- - Book(**ISBN**, name, type, author, location, status, _PublisherID_)
- - Reader(**ReaderID**, name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
- - Admin(**WorkID**, user_name, name, password)
- - Publisher(**PublisherID**, publisher_name)
- - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
- - Manage(**OperationID**, _WorkID_, _ISBN_, type, time)
+- Publisher(**PublisherID**, publisher_name)
+- Book(**ISBN**, name, type, author, location, status, _PublisherID_)
+- Reader(**ReaderID**, name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
+- Admin(**WorkID**, user_name, name, password, tel)
+- Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
+- Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
 
 ## Credit System
 
 > The max value of the credit is 100, and the min value is 0.
 
- - When the book(s) got damaged, the user would lose 25. 
- - When the book(s) got lost, the user have to compensate for the book. If not, he/she will get 0 credit. 
- - When the book(s) got back late, the user would lose 10. And of course, if he/she didn't give back for too long, this scene would be seen as the book(s) got lost. 
- - Only when the book(s) got back, the user could get 1.
+- When the book(s) got damaged, the user would lose 25. 
+- When the book(s) got lost, the user have to compensate for the book. If not, he/she will get 0 credit. 
+- When the book(s) got back late, the user would lose 10. And of course, if he/she didn't give back for too long, this scene would be seen as the book(s) got lost. 
+- Only when the book(s) got back, the user could get 1.
 
 **What's the Credit used for?**:
 
