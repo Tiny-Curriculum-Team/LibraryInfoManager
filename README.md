@@ -48,8 +48,10 @@ LibraryInfoManager
 The credit can effect the max count of book(s) you can borrow and the longest time you can borrow book(s) for as well.
 
 $$
+\begin{aligned}
 UserMaxCount = \lfloor \frac{credit}{100} \times MaxCount \rfloor \\
 UserLongestTime = \lfloor \frac{credit}{100} \times LongestTime \rfloor
+\end{aligned}
 $$
 
 
