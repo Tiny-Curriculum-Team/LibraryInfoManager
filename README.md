@@ -43,74 +43,79 @@ mysql> desc Publisher;
 | Field          | Type        | Null | Key | Default | Extra |
 +----------------+-------------+------+-----+---------+-------+
 | PublisherID    | int         | NO   | PRI | NULL    |       |
-| publisher_name | varchar(40) | YES  |     | NULL    |       |
+| publisher_name | varchar(40) | NO   |     | NULL    |       |
 +----------------+-------------+------+-----+---------+-------+
 2 rows in set (0.00 sec)
 
+
 mysql> desc Book;
-+---------------+-------------+------+-----+---------+-------+
-| Field         | Type        | Null | Key | Default | Extra |
-+---------------+-------------+------+-----+---------+-------+
-| ISBN          | varchar(20) | NO   | PRI | NULL    |       |
-| book_name     | varchar(40) | YES  |     | NULL    |       |
-| book_type     | varchar(20) | YES  |     | NULL    |       |
-| book_author   | varchar(16) | YES  |     | NULL    |       |
-| book_location | varchar(80) | YES  |     | NULL    |       |
-| book_status   | varchar(15) | YES  |     | NULL    |       |
-| PublisherID   | int         | YES  | MUL | NULL    |       |
-+---------------+-------------+------+-----+---------+-------+
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| ISBN        | varchar(20) | NO   | PRI | NULL    |       |
+| book_name   | varchar(40) | NO   |     | NULL    |       |
+| book_type   | varchar(20) | NO   |     | NULL    |       |
+| author      | varchar(16) | NO   |     | NULL    |       |
+| location    | varchar(80) | NO   |     | NULL    |       |
+| status      | varchar(15) | NO   |     | NULL    |       |
+| PublisherID | int         | NO   | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
 7 rows in set (0.00 sec)
+
 
 mysql> desc Reader;
 +------------------+-------------+------+-----+---------+-------+
 | Field            | Type        | Null | Key | Default | Extra |
 +------------------+-------------+------+-----+---------+-------+
 | ReaderID         | varchar(20) | NO   | PRI | NULL    |       |
-| reader_name      | varchar(40) | YES  |     | NULL    |       |
-| user_name        | varchar(20) | YES  |     | NULL    |       |
-| password         | varchar(40) | YES  |     | NULL    |       |
-| account_status   | varchar(20) | YES  |     | NULL    |       |
-| tel              | varchar(11) | YES  |     | NULL    |       |
-| trustworthiness  | float       | YES  |     | NULL    |       |
-| max_borrow_day   | int         | YES  |     | NULL    |       |
-| max_borrow_count | int         | YES  |     | NULL    |       |
+| reader_name      | varchar(40) | NO   |     | NULL    |       |
+| user_name        | varchar(20) | NO   |     | NULL    |       |
+| password         | varchar(40) | NO   |     | NULL    |       |
+| account_status   | varchar(20) | NO   |     | NULL    |       |
+| tel              | varchar(11) | NO   |     | NULL    |       |
+| trustworthiness  | int         | NO   |     | 100     |       |
+| max_borrow_day   | int         | NO   |     | NULL    |       |
+| max_borrow_count | int         | NO   |     | NULL    |       |
 +------------------+-------------+------+-----+---------+-------+
-9 rows in set (0.00 sec)
+9 rows in set (0.01 sec)
+
 
 mysql> desc Admin;
 +------------+-------------+------+-----+---------+-------+
 | Field      | Type        | Null | Key | Default | Extra |
 +------------+-------------+------+-----+---------+-------+
 | WorkID     | varchar(20) | NO   | PRI | NULL    |       |
-| admin_name | varchar(40) | YES  |     | NULL    |       |
-| user_name  | varchar(20) | YES  |     | NULL    |       |
-| password   | varchar(40) | YES  |     | NULL    |       |
-| tel        | varchar(11) | YES  |     | NULL    |       |
+| admin_name | varchar(40) | NO   |     | NULL    |       |
+| user_name  | varchar(20) | NO   |     | NULL    |       |
+| password   | varchar(40) | NO   |     | NULL    |       |
+| tel        | varchar(11) | NO   |     | NULL    |       |
 +------------+-------------+------+-----+---------+-------+
 5 rows in set (0.00 sec)
+
 
 mysql> desc Borrow;
 +----------------+-------------+------+-----+---------+-------+
 | Field          | Type        | Null | Key | Default | Extra |
 +----------------+-------------+------+-----+---------+-------+
 | OperationID    | varchar(20) | NO   | PRI | NULL    |       |
-| ReaderID       | varchar(20) | YES  | MUL | NULL    |       |
-| ISBN           | varchar(20) | YES  | MUL | NULL    |       |
-| borrow_time    | date        | YES  |     | NULL    |       |
-| status         | varchar(80) | YES  |     | NULL    |       |
-| give_back_time | varchar(15) | YES  |     | NULL    |       |
+| ReaderID       | varchar(20) | NO   | MUL | NULL    |       |
+| ISBN           | varchar(20) | NO   | MUL | NULL    |       |
+| borrow_time    | date        | NO   |     | NULL    |       |
+| status         | varchar(80) | NO   |     | NULL    |       |
+| give_back_time | date        | YES  |     | NULL    |       |
 +----------------+-------------+------+-----+---------+-------+
-6 rows in set (0.00 sec)
+6 rows in set (0.01 sec)
+
 
 mysql> desc Manage;
 +--------------+-------------+------+-----+---------+-------+
 | Field        | Type        | Null | Key | Default | Extra |
 +--------------+-------------+------+-----+---------+-------+
 | OperationID  | varchar(20) | NO   | PRI | NULL    |       |
-| WorkID       | varchar(20) | YES  | MUL | NULL    |       |
-| ISBN         | varchar(20) | YES  | MUL | NULL    |       |
-| operate_type | varchar(20) | YES  |     | NULL    |       |
-| operate_time | date        | YES  |     | NULL    |       |
+| WorkID       | varchar(20) | NO   | MUL | NULL    |       |
+| ISBN         | varchar(20) | NO   | MUL | NULL    |       |
+| operate_type | varchar(20) | NO   |     | NULL    |       |
+| operate_time | date        | NO   |     | NULL    |       |
 +--------------+-------------+------+-----+---------+-------+
 5 rows in set (0.00 sec)
 ```
