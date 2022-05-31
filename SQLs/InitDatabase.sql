@@ -1,50 +1,57 @@
 create table Publisher (
     PublisherID int,
-    publisher_name varchar(40),
+    publisher_name varchar(40) not null,
     PRIMARY KEY (PublisherID)
+);
+
+create table BookType (
+    BookTypeID int,
+    book_type_name varchar(40) not null,
+    PRIMARY KEY (BookTypeID)
 );
 
 create table Book (
     ISBN varchar(20),
-    book_name varchar(40),
-    book_type varchar(20),
-    author varchar(16),
-    location varchar(80),
-    status varchar(15),
-    PublisherID int,
+    book_name varchar(40) not null,
+    book_type_id int not null,
+    author varchar(40) not null,
+    location varchar(80) not null,
+    status varchar(7) default 'IN' not null CHECK (status in ('IN', 'OUT', 'LOST')),
+    PublisherID int not null,
     PRIMARY KEY (ISBN),
-    FOREIGN KEY (PublisherID) REFERENCES Publisher(PublisherID)
+    FOREIGN KEY (PublisherID) REFERENCES Publisher(PublisherID),
+    FOREIGN KEY (book_type_id) REFERENCES BookType(BookTypeID)
 );
 
 create table Reader (
     ReaderID varchar(20),
-    reader_name varchar(40),
-    user_name varchar(20),
-    password varchar(40),
-    account_status varchar(20),
-    tel varchar(11),
-    trustworthiness float,
-    max_borrow_day int,
-    max_borrow_count int,
+    reader_name varchar(40) not null,
+    user_name varchar(20) not null,
+    password varchar(40) not null,
+    account_status varchar(20) default 'NORMAL' not null CHECK (account_status in ('NORMAL', 'DELETED')),
+    tel varchar(11) not null,
+    trustworthiness int default 100 not null CHECK (trustworthiness between 0 and 100),
+    max_borrow_day int not null,
+    max_borrow_count int not null,
     PRIMARY KEY (ReaderID)
 );
 
-create table Admin (
-    WorkID varchar(20),
-    admin_name varchar(40),
-    user_name varchar(20),
-    password varchar(40),
-    tel varchar(11),
+create table Administrator (
+    WorkID int,
+    admin_name varchar(40) not null,
+    user_name varchar(20) not null,
+    password varchar(40) not null,
+    tel varchar(11) not null,
     PRIMARY KEY (WorkID)
 );
 
 create table Borrow (
     OperationID varchar(20),
-    ReaderID varchar(20),
-    ISBN varchar(20),
-    borrow_time date,
-    status varchar(80),
-    give_back_time varchar(15),
+    ReaderID varchar(20) not null,
+    ISBN varchar(20) not null,
+    borrow_time date not null,
+    status varchar(7) not null CHECK (status in ('BORROWED', 'BACK')),
+    give_back_time date,
     PRIMARY KEY (OperationID),
     FOREIGN KEY (ReaderID) REFERENCES Reader(ReaderID),
     FOREIGN KEY (ISBN) REFERENCES Book(ISBN)
@@ -52,11 +59,11 @@ create table Borrow (
 
 create table Manage (
     OperationID varchar(20),
-    WorkID varchar(20),
-    ISBN varchar(20),
-    operate_type varchar (20),
-    operate_time date,
+    WorkID int not null,
+    ISBN varchar(20) not null,
+    operate_type varchar (20) not null,
+    operate_time date not null,
     PRIMARY KEY (OperationID),
-    FOREIGN KEY (WorkID) REFERENCES Admin(WorkID),
+    FOREIGN KEY (WorkID) REFERENCES Administrator(WorkID),
     FOREIGN KEY (ISBN) REFERENCES Book(ISBN)
 );

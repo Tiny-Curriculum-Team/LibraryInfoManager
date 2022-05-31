@@ -29,9 +29,10 @@ LibraryInfoManager
 > The Bold properties are primary keys. And the Italic properties are foreign keys.
 
 - Publisher(**PublisherID**, publisher_name)
-- Book(**ISBN**, book_name, book_type, author, location, status, _PublisherID_)
+- BookType(**BookTypeID**, book_type_name)
+- Book(**ISBN**, book_name, book_type_id, author, location, status, _PublisherID_)
 - Reader(**ReaderID**, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
-- Admin(**WorkID**, admin_name, user_name, password, tel)
+- Administrator(**WorkID**, admin_name, user_name, password, tel)
 - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
 - Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
 
@@ -45,23 +46,30 @@ mysql> desc Publisher;
 | PublisherID    | int         | NO   | PRI | NULL    |       |
 | publisher_name | varchar(40) | NO   |     | NULL    |       |
 +----------------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc BookType;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| BookTypeID     | int         | NO   | PRI | NULL    |       |
+| book_type_name | varchar(40) | NO   |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
 2 rows in set (0.00 sec)
 
-
 mysql> desc Book;
-+-------------+-------------+------+-----+---------+-------+
-| Field       | Type        | Null | Key | Default | Extra |
-+-------------+-------------+------+-----+---------+-------+
-| ISBN        | varchar(20) | NO   | PRI | NULL    |       |
-| book_name   | varchar(40) | NO   |     | NULL    |       |
-| book_type   | varchar(20) | NO   |     | NULL    |       |
-| author      | varchar(16) | NO   |     | NULL    |       |
-| location    | varchar(80) | NO   |     | NULL    |       |
-| status      | varchar(15) | NO   |     | NULL    |       |
-| PublisherID | int         | NO   | MUL | NULL    |       |
-+-------------+-------------+------+-----+---------+-------+
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| ISBN         | varchar(20) | NO   | PRI | NULL    |       |
+| book_name    | varchar(40) | NO   |     | NULL    |       |
+| book_type_id | int         | NO   | MUL | NULL    |       |
+| author       | varchar(40) | NO   |     | NULL    |       |
+| location     | varchar(80) | NO   |     | NULL    |       |
+| status       | varchar(7)  | NO   |     | IN      |       |
+| PublisherID  | int         | NO   | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
 7 rows in set (0.00 sec)
-
 
 mysql> desc Reader;
 +------------------+-------------+------+-----+---------+-------+
@@ -71,27 +79,25 @@ mysql> desc Reader;
 | reader_name      | varchar(40) | NO   |     | NULL    |       |
 | user_name        | varchar(20) | NO   |     | NULL    |       |
 | password         | varchar(40) | NO   |     | NULL    |       |
-| account_status   | varchar(20) | NO   |     | NULL    |       |
+| account_status   | varchar(20) | NO   |     | NORMAL  |       |
 | tel              | varchar(11) | NO   |     | NULL    |       |
 | trustworthiness  | int         | NO   |     | 100     |       |
 | max_borrow_day   | int         | NO   |     | NULL    |       |
 | max_borrow_count | int         | NO   |     | NULL    |       |
 +------------------+-------------+------+-----+---------+-------+
-9 rows in set (0.01 sec)
+9 rows in set (0.00 sec)
 
-
-mysql> desc Admin;
+mysql> desc Administrator;
 +------------+-------------+------+-----+---------+-------+
 | Field      | Type        | Null | Key | Default | Extra |
 +------------+-------------+------+-----+---------+-------+
-| WorkID     | varchar(20) | NO   | PRI | NULL    |       |
+| WorkID     | int         | NO   | PRI | NULL    |       |
 | admin_name | varchar(40) | NO   |     | NULL    |       |
 | user_name  | varchar(20) | NO   |     | NULL    |       |
 | password   | varchar(40) | NO   |     | NULL    |       |
 | tel        | varchar(11) | NO   |     | NULL    |       |
 +------------+-------------+------+-----+---------+-------+
 5 rows in set (0.00 sec)
-
 
 mysql> desc Borrow;
 +----------------+-------------+------+-----+---------+-------+
@@ -101,18 +107,17 @@ mysql> desc Borrow;
 | ReaderID       | varchar(20) | NO   | MUL | NULL    |       |
 | ISBN           | varchar(20) | NO   | MUL | NULL    |       |
 | borrow_time    | date        | NO   |     | NULL    |       |
-| status         | varchar(80) | NO   |     | NULL    |       |
+| status         | varchar(7)  | NO   |     | NULL    |       |
 | give_back_time | date        | YES  |     | NULL    |       |
 +----------------+-------------+------+-----+---------+-------+
 6 rows in set (0.01 sec)
-
 
 mysql> desc Manage;
 +--------------+-------------+------+-----+---------+-------+
 | Field        | Type        | Null | Key | Default | Extra |
 +--------------+-------------+------+-----+---------+-------+
 | OperationID  | varchar(20) | NO   | PRI | NULL    |       |
-| WorkID       | varchar(20) | NO   | MUL | NULL    |       |
+| WorkID       | int         | NO   | MUL | NULL    |       |
 | ISBN         | varchar(20) | NO   | MUL | NULL    |       |
 | operate_type | varchar(20) | NO   |     | NULL    |       |
 | operate_time | date        | NO   |     | NULL    |       |
