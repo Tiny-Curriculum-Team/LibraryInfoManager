@@ -19,9 +19,10 @@ LibraryInfoManager
 ├── README.md
 ├── requirements.txt
 └── SQLs
-    └── InitDatabase.sql
+    ├── InitDatabase.sql
+    └── InitData.sql
 
-2 directories, 7 files
+2 directories, 8 files
 ```
 
 ## Table Structure
