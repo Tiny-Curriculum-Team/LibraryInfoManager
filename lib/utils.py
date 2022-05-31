@@ -6,13 +6,11 @@ def connect_to_db(host="192.168.192.1",
                   charset='utf8'):
     import pymysql
     pymysql.install_as_MySQLdb()
-    db = None
-    if database is None:
-        db = pymysql.connect(host=host, port=port, user=user,
-                             password=password, charset=charset)
-    else:
-        db = pymysql.connect(host=host, port=port, user=user,
-                             password=password, db=database, charset=charset)
+    db = pymysql.connect(host=host, port=port, user=user, password=password, charset=charset) \
+        if database is None else pymysql.connect(
+            host=host, port=port, user=user,
+            password=password, db=database, charset=charset
+        )
     return db
 
 
