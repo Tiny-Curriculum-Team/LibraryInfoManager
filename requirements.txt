@@ -1,2 +1,3 @@
 pymysql
 pycryptodome
+hashlib
