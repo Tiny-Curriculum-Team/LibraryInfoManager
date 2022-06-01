@@ -12,17 +12,102 @@ It's based on _**Python**_, _**Django**_ and _**MySQL**_.
 ```
 LibraryInfoManager
 ├── ConnectionTemplate.py
+├── Django
+│   ├── Admin
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   └── __pycache__
+│   │   │       └── __init__.cpython-38.pyc
+│   │   ├── models.py
+│   │   ├── __pycache__
+│   │   │   ├── admin.cpython-38.pyc
+│   │   │   ├── apps.cpython-38.pyc
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   └── models.cpython-38.pyc
+│   │   ├── tests.py
+│   │   └── views.py
+│   ├── Django
+│   │   ├── asgi.py
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   ├── settings.cpython-38.pyc
+│   │   │   ├── urls.cpython-38.pyc
+│   │   │   └── wsgi.cpython-38.pyc
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── Login
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   └── __pycache__
+│   │   │       └── __init__.cpython-38.pyc
+│   │   ├── models.py
+│   │   ├── __pycache__
+│   │   │   ├── admin.cpython-38.pyc
+│   │   │   ├── apps.cpython-38.pyc
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   └── models.cpython-38.pyc
+│   │   ├── tests.py
+│   │   └── views.py
+│   ├── manage.py
+│   ├── Signup
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   └── __pycache__
+│   │   │       └── __init__.cpython-38.pyc
+│   │   ├── models.py
+│   │   ├── __pycache__
+│   │   │   ├── admin.cpython-38.pyc
+│   │   │   ├── apps.cpython-38.pyc
+│   │   │   ├── __init__.cpython-38.pyc
+│   │   │   ├── models.cpython-38.pyc
+│   │   │   ├── urls.cpython-38.pyc
+│   │   │   └── views.cpython-38.pyc
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── static
+│   │   ├── login.html
+│   │   └── signup.html
+│   ├── tempIndex
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── migrations
+│   │   │   └── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   └── views.py
+│   └── template
+│       ├── base.html
+│       ├── footer.html
+│       └── header.html
 ├── InitDBToolkit.py
 ├── lib
+│   ├── encrypt.py
+│   ├── __pycache__
+│   │   ├── encrypt.cpython-38.pyc
+│   │   └── utils.cpython-38.pyc
 │   └── utils.py
 ├── LICENSE
 ├── README.md
 ├── requirements.txt
-└── SQLs
-    ├── InitDatabase.sql
-    └── InitData.sql
+├── SQLs
+│   ├── InitDatabase.sql
+│   └── InitData.sql
+└── Test.py
 
-2 directories, 8 files
+22 directories, 73 files
 ```
 
 ## Table Structure
