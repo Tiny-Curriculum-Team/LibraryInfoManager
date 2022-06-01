@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 
 def user_login(request):
-    pass
+    return HttpResponse("Hello, world. You're at the user login index.")
 
 
 def user_logout(request):
