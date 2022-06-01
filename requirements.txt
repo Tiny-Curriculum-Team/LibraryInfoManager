@@ -1,3 +1,4 @@
 pymysql
 pycryptodome
 hashlib
+django

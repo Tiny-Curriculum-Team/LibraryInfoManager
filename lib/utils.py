@@ -26,3 +26,7 @@ def execute_sql_script(cursor, file_path: str):
         for sql in sql_list:
             cursor.execute(sql)
 
+
+def load_configuration():
+    pass
+
