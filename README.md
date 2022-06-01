@@ -9,6 +9,9 @@ The repository is a Database Curriculum Design.
 It's based on _**Python**_, _**Django**_ and _**MySQL**_.
 
 ## File Structure
+<details>
+<summary>File Structure Info</summary>
+
 ```
 LibraryInfoManager
 ├── ConnectionTemplate.py
@@ -109,6 +112,7 @@ LibraryInfoManager
 
 22 directories, 73 files
 ```
+</details>
 
 ## Table Structure
 
