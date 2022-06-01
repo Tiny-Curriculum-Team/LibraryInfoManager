@@ -1,4 +1,5 @@
 from os.path import join
+from lib.rsa_encrypt import generate_rsa_keys
 from lib.utils import connect_to_db, disconnect_db, execute_sql_script
 
 
@@ -8,25 +9,25 @@ def check_existence_of_database():
     init_cursor.execute("show databases like 'LIMS';")
     result = init_cursor.fetchall()
     if result:
-        answer = input("Database LIMS exists, want to remove it?[y/N]\n")
+        answer = input("Database LIMS exists, want to remove it?[y/N]: ")
         if answer == 'y':
             init_cursor.execute('drop database LIMS;')
         else:
             print('Nothing done.')
-            return False
+            return True
     init_cursor.execute("create database LIMS CHARACTER SET utf8 COLLATE utf8_general_ci;")
     disconnect_db(init_connection)
-    return True
+    return False
 
 
-def init_db(data_initialize):
-    check_existence_of_database()
+def init_db():
+    if check_existence_of_database():
+        return None
     database_connection = connect_to_db(database='LIMS')
     cursor = database_connection.cursor()
     execute_sql_script(cursor, join('./SQLs', 'InitDatabase.sql'))
     database_connection.commit()
     disconnect_db(database_connection)
-    data_initialize()
 
 
 def init_data():
@@ -38,4 +39,5 @@ def init_data():
 
 
 if __name__ == '__main__':
-    init_db(init_data)
+    init_db()
+    init_data()
