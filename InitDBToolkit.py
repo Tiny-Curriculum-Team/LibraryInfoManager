@@ -20,7 +20,7 @@ def check_existence_of_database():
     return False
 
 
-def init_db():
+def init_db(data_initialize):
     if check_existence_of_database():
         return None
     database_connection = connect_to_db(database='LIMS')
@@ -28,6 +28,7 @@ def init_db():
     execute_sql_script(cursor, join('./SQLs', 'InitDatabase.sql'))
     database_connection.commit()
     disconnect_db(database_connection)
+    data_initialize()
 
 
 def init_data():
@@ -39,5 +40,5 @@ def init_data():
 
 
 if __name__ == '__main__':
-    init_db()
-    init_data()
+    init_db(init_data)
+
