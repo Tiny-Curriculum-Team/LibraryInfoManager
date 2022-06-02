@@ -211,4 +211,6 @@ $$
 
 To use it, you shall run InitDBToolkit first. 
 
+Then run `python Django/manage.py runserver`.
+
 _**(On development so that the left are unconsidered.)**_
