@@ -1,5 +1,4 @@
 from os.path import join
-from lib.encrypt import generate_rsa_keys
 from lib.utils import connect_to_db, disconnect_db, execute_sql_script
 
 

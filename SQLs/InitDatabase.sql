@@ -27,7 +27,7 @@ create table Reader (
     ReaderID varchar(20),
     reader_name varchar(40) not null,
     user_name varchar(20) not null,
-    password varchar(40) not null,
+    password varchar(1024) not null,
     account_status varchar(20) default 'NORMAL' not null CHECK (account_status in ('NORMAL', 'DELETED')),
     tel varchar(11) not null,
     trustworthiness int default 100 not null CHECK (trustworthiness between 0 and 100),
@@ -40,7 +40,7 @@ create table Administrator (
     WorkID int,
     admin_name varchar(40) not null,
     user_name varchar(20) not null,
-    password varchar(40) not null,
+    password varchar(1024) not null,
     tel varchar(11) not null,
     PRIMARY KEY (WorkID)
 );
