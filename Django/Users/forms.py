@@ -6,6 +6,9 @@ class UserLoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField()
 
+    class Meta:
+        db_table = 'Reader'
+
 
 class UserRegisterForm(forms.ModelForm):
     password = forms.CharField()
