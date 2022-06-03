@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from .forms import UserLoginForm, UserRegisterForm
-# from .utils import authenticate
 
 
 # Create your views here.

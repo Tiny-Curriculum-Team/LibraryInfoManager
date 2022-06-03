@@ -27,25 +27,3 @@ def disconnect_db(db):
     cursor = db.cursor()
     cursor.close()
     db.close()
-
-
-def authenticate(data_post):
-    user_id = data_post['username']
-    password = data_post['password']
-    encrypted_password = md5_encrypt(password)
-    database = connect_to_db(database='LIMS')
-    cursor = database.cursor()
-    query_user = f"select * from Reader where ReaderID='{user_id}';"
-    print(user_id)
-    cursor.execute(query_user)
-    result = cursor.fetchall()
-    print(result)
-    if result:
-        password = result[0][3]
-        if password == encrypted_password:
-            return True
-        else:
-            return False
-    else:
-        return None
-
