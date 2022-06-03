@@ -130,31 +130,32 @@ mysql> desc Book;
 7 rows in set (0.00 sec)
 
 mysql> desc Reader;
-+------------------+-------------+------+-----+---------+-------+
-| Field            | Type        | Null | Key | Default | Extra |
-+------------------+-------------+------+-----+---------+-------+
-| ReaderID         | varchar(20) | NO   | PRI | NULL    |       |
-| reader_name      | varchar(40) | NO   |     | NULL    |       |
-| user_name        | varchar(20) | NO   |     | NULL    |       |
-| password         | varchar(40) | NO   |     | NULL    |       |
-| account_status   | varchar(20) | NO   |     | NORMAL  |       |
-| tel              | varchar(11) | NO   |     | NULL    |       |
-| trustworthiness  | int         | NO   |     | 100     |       |
-| max_borrow_day   | int         | NO   |     | NULL    |       |
-| max_borrow_count | int         | NO   |     | NULL    |       |
-+------------------+-------------+------+-----+---------+-------+
-9 rows in set (0.00 sec)
++------------------+---------------+------+-----+---------+----------------+
+| Field            | Type          | Null | Key | Default | Extra          |
++------------------+---------------+------+-----+---------+----------------+
+| ReaderID         | int           | NO   | PRI | NULL    | auto_increment |
+| reader_name      | varchar(40)   | NO   |     | NULL    |                |
+| user_name        | varchar(20)   | NO   |     | NULL    |                |
+| password         | varchar(1024) | NO   |     | NULL    |                |
+| account_status   | varchar(20)   | NO   |     | NULL    |                |
+| tel              | varchar(11)   | NO   |     | NULL    |                |
+| trustworthiness  | int           | NO   |     | NULL    |                |
+| max_borrow_day   | int           | NO   |     | NULL    |                |
+| max_borrow_count | int           | NO   |     | NULL    |                |
+| last_login       | datetime(6)   | NO   |     | NULL    |                |
++------------------+---------------+------+-----+---------+----------------+
+10 rows in set (0.00 sec)
 
 mysql> desc Administrator;
-+------------+-------------+------+-----+---------+-------+
-| Field      | Type        | Null | Key | Default | Extra |
-+------------+-------------+------+-----+---------+-------+
-| WorkID     | int         | NO   | PRI | NULL    |       |
-| admin_name | varchar(40) | NO   |     | NULL    |       |
-| user_name  | varchar(20) | NO   |     | NULL    |       |
-| password   | varchar(40) | NO   |     | NULL    |       |
-| tel        | varchar(11) | NO   |     | NULL    |       |
-+------------+-------------+------+-----+---------+-------+
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| WorkID     | int           | NO   | PRI | NULL    |       |
+| admin_name | varchar(40)   | NO   |     | NULL    |       |
+| user_name  | varchar(20)   | NO   |     | NULL    |       |
+| password   | varchar(1024) | NO   |     | NULL    |       |
+| tel        | varchar(11)   | NO   |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
 5 rows in set (0.00 sec)
 
 mysql> desc Borrow;
