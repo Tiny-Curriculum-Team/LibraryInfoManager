@@ -1,21 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, get_user_model, authenticate
 from .forms import UserLoginForm, UserRegisterForm
-from django.contrib.auth import get_user_model
+# from .utils import authenticate
 
 
 # Create your views here.
 def user_login(request):
     if request.method == 'POST':
         user_login_form = get_user_model()
-        if user_login_form.is_valid():
-            data = user_login_form.cleaned_data  # clean the data
-            # 检验账号、密码是否正确匹配数据库中的某个用户
-            # 如果均匹配则返回这个 user 对象
+        if user_login_form:
+            data = request.POST
             user = authenticate(username=data['username'], password=data['password'])
             if user:
-                # 将用户数据保存在 session 中，即实现了登录动作
                 login(request, user)
                 return HttpResponse("Success!")
             else:
@@ -41,17 +38,15 @@ def user_register(request):
         user_register_form = UserRegisterForm(data=request.POST)
         if user_register_form.is_valid():
             new_user = user_register_form.save(commit=False)
-            # 设置密码
-            new_user.set_password(user_register_form.cleaned_data['password'])
+            new_user.set_password(user_register_form.cleaned_data['password1'])
             new_user.save()
-            # 保存好数据后立即登录并返回博客列表页面
             login(request, new_user)
-            return redirect("article:article_list")
+            return HttpResponse("Signing up succeeded!")
         else:
             return HttpResponse("注册表单输入有误。请重新输入~")
     elif request.method == 'GET':
         user_register_form = UserRegisterForm()
-        context = { 'form': user_register_form }
+        context = {'form': user_register_form}
         return render(request, 'static/signup.html', context)
     else:
         return HttpResponse("请使用GET或POST请求数据")

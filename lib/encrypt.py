@@ -30,3 +30,7 @@ def md5_encrypt(message: str) -> str:
     hashlib_objection = hashlib.md5()
     hashlib_objection.update(message.encode(encoding='utf-8'))
     return hashlib_objection.hexdigest()
+
+
+if __name__ == '__main__':
+    pass

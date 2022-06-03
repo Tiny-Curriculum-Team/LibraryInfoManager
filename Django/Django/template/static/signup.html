@@ -6,22 +6,27 @@
     <div class="row justify-content-md-center">
         <div class="col-md-6">
             <br>
-            <form method="post" action="LoginInterface">
+            <form method="post">
                 {% csrf_token %}
                 <!-- Account Name -->
                 <div class="form-group">
-                    <label for="username">昵称</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+                    <label for="user_name">用户名</label>
+                    <input type="text" class="form-control" id="user_name" name="user_name" required>
                 </div>
                 <!-- Name -->
                 <div class="form-group">
-                    <label for="name">姓名</label>
-                    <input type="text" class="form-control" id="name" name="email">
+                    <label for="reader_name">姓名</label>
+                    <input type="text" class="form-control" id="reader_name" name="reader_name">
+                </div>
+                <!-- Telephone Number-->
+                <div class="form-group">
+                    <label for="tel">手机号</label>
+                    <input type="text" class="form-control" id="tel" name="tel" required>
                 </div>
                 <!-- Password -->
                 <div class="form-group">
-                    <label for="password">设置密码</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <label for="password1">设置密码</label>
+                    <input type="password" class="form-control" id="password1" name="password1" required>
                 </div>
                 <!-- Check Password -->
                 <div class="form-group">
