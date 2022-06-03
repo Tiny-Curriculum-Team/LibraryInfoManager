@@ -16,6 +16,15 @@ It's based on _**Python**_, _**Django**_ and _**MySQL**_.
 LibraryInfoManager
 ├── ConnectionTemplate.py
 ├── Django
+│   ├── Admin
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── migrations
+│   │   │   └── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   └── views.py
 │   ├── Django
 │   │   ├── asgi.py
 │   │   ├── __init__.py
@@ -25,43 +34,38 @@ LibraryInfoManager
 │   │   │   ├── urls.cpython-38.pyc
 │   │   │   └── wsgi.cpython-38.pyc
 │   │   ├── settings.py
+│   │   ├── template
+│   │   │   ├── base.html
+│   │   │   ├── footer.html
+│   │   │   ├── header.html
+│   │   │   └── static
+│   │   │       ├── login.html
+│   │   │       └── signup.html
 │   │   ├── urls.py
 │   │   └── wsgi.py
 │   ├── manage.py
-│   ├── static
-│   │   ├── login.html
-│   │   └── signup.html
-│   ├── tempIndex
-│   │   ├── admin.py
-│   │   ├── apps.py
-│   │   ├── __init__.py
-│   │   ├── migrations
-│   │   │   └── __init__.py
-│   │   ├── models.py
-│   │   ├── tests.py
-│   │   └── views.py
-│   ├── template
-│   │   ├── base.html
-│   │   ├── footer.html
-│   │   └── header.html
 │   └── Users
-│       ├── admin.py
 │       ├── apps.py
+│       ├── forms.py
 │       ├── __init__.py
 │       ├── migrations
+│       │   ├── 0001_initial.py
 │       │   ├── __init__.py
 │       │   └── __pycache__
+│       │       ├── 0001_initial.cpython-38.pyc
 │       │       └── __init__.cpython-38.pyc
 │       ├── models.py
 │       ├── __pycache__
-│       │   ├── admin.cpython-38.pyc
 │       │   ├── apps.cpython-38.pyc
+│       │   ├── forms.cpython-38.pyc
 │       │   ├── __init__.cpython-38.pyc
 │       │   ├── models.cpython-38.pyc
 │       │   ├── urls.cpython-38.pyc
+│       │   ├── utils.cpython-38.pyc
 │       │   └── views.cpython-38.pyc
 │       ├── tests.py
 │       ├── urls.py
+│       ├── utils.py
 │       └── views.py
 ├── InitDBToolkit.py
 ├── lib
@@ -78,7 +82,7 @@ LibraryInfoManager
 │   └── InitData.sql
 └── Test.py
 
-14 directories, 49 files
+14 directories, 53 files
 ```
 </details>
 
@@ -211,6 +215,8 @@ $$
 ## Usage
 
 To use it, you shall run InitDBToolkit first. 
+
+The next step is to Initial the database, run `python Django/manage.py migrate`.
 
 Then run `python Django/manage.py runserver`.
 
