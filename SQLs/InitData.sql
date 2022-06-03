@@ -162,11 +162,11 @@ insert into Book
 insert into Reader
     (ReaderID, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
     values
-    ('10245045', '6aCwWHeqjS', 'ibJSH', '123456', 'NORMAL', '13824737248', 100, 30, 10),
-    ('10829841', 'YG46YGvkRz', 'Tsmp9', '123456', 'NORMAL', '13389145778', 100, 30, 10),
-    ('71109414', 'VPIGHfjJCm', 'PgLTC', '123456', 'NORMAL', '13242615506', 100, 30, 10),
-    ('24038364', 'RoJNR0a971', 'spS5X', '123456', 'NORMAL', '13169776687', 100, 30, 10),
-    ('25074716', '35aPFh7PO2', 'jfXR7', '123456', 'NORMAL', '13221123254', 100, 30, 10);
+    ('10245045', '6aCwWHeqjS', 'ibJSH', 'e10adc3949ba59abbe56e057f20f883e', 'NORMAL', '13824737248', 100, 30, 10),
+    ('10829841', 'YG46YGvkRz', 'Tsmp9', 'e10adc3949ba59abbe56e057f20f883e', 'NORMAL', '13389145778', 100, 30, 10),
+    ('71109414', 'VPIGHfjJCm', 'PgLTC', 'e10adc3949ba59abbe56e057f20f883e', 'NORMAL', '13242615506', 100, 30, 10),
+    ('24038364', 'RoJNR0a971', 'spS5X', 'e10adc3949ba59abbe56e057f20f883e', 'NORMAL', '13169776687', 100, 30, 10),
+    ('25074716', '35aPFh7PO2', 'jfXR7', 'e10adc3949ba59abbe56e057f20f883e', 'NORMAL', '13221123254', 100, 30, 10);
 
 -- Admin Table Initialize
 insert into Administrator
