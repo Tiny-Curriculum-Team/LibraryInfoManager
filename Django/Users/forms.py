@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import Reader
+from .models import User
 
 
 class UserLoginForm(forms.Form):
@@ -8,19 +7,19 @@ class UserLoginForm(forms.Form):
     password = forms.CharField()
 
     class Meta:
-        db_table = 'Reader'
+        db_table = 'User'
 
 
 class UserRegisterForm(forms.ModelForm):
-    reader_name = forms.CharField()
-    user_name = forms.CharField()
+    nickname = forms.CharField()
+    name = forms.CharField()
     tel = forms.CharField()
     password1 = forms.CharField()
     password2 = forms.CharField()
 
     class Meta:
-        model = Reader
-        fields = ('reader_name', 'user_name', 'tel')
+        model = User
+        fields = ('nickname', 'name', 'tel')
 
     def clean_password2(self):
         data = self.cleaned_data

@@ -31,7 +31,6 @@ def user_logout(request):
     return HttpResponse("Success!")
 
 
-# 用户注册
 def user_register(request):
     if request.method == 'POST':
         user_register_form = UserRegisterForm(data=request.POST)

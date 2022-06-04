@@ -158,7 +158,7 @@ insert into Book
     ('989-28-79-11297-4', '设计中的设计', '16', '原研哉', '74-36-41', 'IN', 29),
     ('989-28-3705-205-2', '从地球到月球', '13', '儒勒凡尔纳', '62-42-76', 'IN', 34);
 
--- Reader Table Initialize
+-- User Table Initialize
 insert into Reader
     (ReaderID, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
     values

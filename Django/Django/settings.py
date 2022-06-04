@@ -133,5 +133,6 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "Users.Reader"
+# AUTH_USER_MODEL = "Admin.Administrator"
+AUTH_USER_MODEL = "Users.User"
 

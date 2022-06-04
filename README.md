@@ -93,7 +93,7 @@ LibraryInfoManager
 - Publisher(**PublisherID**, publisher_name)
 - BookType(**BookTypeID**, book_type_name)
 - Book(**ISBN**, book_name, book_type_id, author, location, status, _PublisherID_)
-- Reader(**ReaderID**, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
+- User(**ReaderID**, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
 - Administrator(**WorkID**, admin_name, user_name, password, tel)
 - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
 - Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
@@ -133,7 +133,7 @@ mysql> desc Book;
 +--------------+-------------+------+-----+---------+-------+
 7 rows in set (0.00 sec)
 
-mysql> desc Reader;
+mysql> desc User;
 +------------------+---------------+------+-----+---------+----------------+
 | Field            | Type          | Null | Key | Default | Extra          |
 +------------------+---------------+------+-----+---------+----------------+
