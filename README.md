@@ -83,7 +83,7 @@ LibraryInfoManager
 - Publisher(**PublisherID**, publisher_name)
 - BookType(**BookTypeID**, book_type_name)
 - Book(**ISBN**, book_name, book_type_id, author, location, status, _PublisherID_)
-- User(**UserID**, name, nickname, password, tel, is_admin, is_staff, is_active, last_login, trustworthiness, max_borrow_day, max_borrow_count)
+- Users(**UserID**, name, nickname, password, tel, is_admin, is_staff, is_active, last_login, trustworthiness, max_borrow_day, max_borrow_count)
 - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
 - Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
 
