@@ -2,4 +2,3 @@ pymysql
 pycryptodome
 hashlib
 django
-migrations/*

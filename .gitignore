@@ -2,3 +2,4 @@
 __pycache__
 Test.py
 tempIndex
+/Django/*/migrations/*
