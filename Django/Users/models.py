@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 # Create your models here.
@@ -10,7 +9,8 @@ class UserManager(BaseUserManager):
             name=name,
             nickname=nickname,
             tel=tel,
-            is_admin=is_admin
+            is_admin=is_admin,
+            is_staff=is_admin
         )
         user.set_password(password)
         user.save(using="default")
@@ -32,6 +32,7 @@ class User(AbstractBaseUser):
     tel = models.CharField(max_length=11)
     # User Status Properties
     is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(auto_now=True)
     # User Extra Properties
@@ -50,6 +51,12 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'UserID'
     is_anonymous = False
     is_authenticated = False
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return self.is_admin
 
     class Meta:
         db_table = 'Users'
