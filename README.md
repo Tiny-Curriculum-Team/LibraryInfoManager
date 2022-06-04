@@ -82,30 +82,30 @@ LibraryInfoManager
 
 - Publisher(**PublisherID**, publisher_name)
 - BookType(**BookTypeID**, book_type_name)
-- Book(**ISBN**, book_name, book_type_id, author, location, status, _PublisherID_)
+- Book(**ISBN**, book_name, author, location, status, _book_type_id_, _publisher_id_)
 - Users(**UserID**, name, nickname, password, tel, is_admin, is_staff, is_active, last_login, trustworthiness, max_borrow_day, max_borrow_count)
-- Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
-- Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
+- Borrow(**OperationID**, borrow_time, status, give_back_time, _book_id_, _user_id_)
+- Manage(**OperationID**, operate_type, operate_time, _book_id_, _user_id_)
 
 <details>
 
 ```sql
 mysql> desc Publisher;
-+----------------+-------------+------+-----+---------+-------+
-| Field          | Type        | Null | Key | Default | Extra |
-+----------------+-------------+------+-----+---------+-------+
-| PublisherID    | int         | NO   | PRI | NULL    |       |
-| publisher_name | varchar(40) | NO   |     | NULL    |       |
-+----------------+-------------+------+-----+---------+-------+
-2 rows in set (0.01 sec)
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| PublisherID    | int         | NO   | PRI | NULL    | auto_increment |
+| publisher_name | varchar(40) | NO   |     | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
 
 mysql> desc BookType;
-+----------------+-------------+------+-----+---------+-------+
-| Field          | Type        | Null | Key | Default | Extra |
-+----------------+-------------+------+-----+---------+-------+
-| BookTypeID     | int         | NO   | PRI | NULL    |       |
-| book_type_name | varchar(40) | NO   |     | NULL    |       |
-+----------------+-------------+------+-----+---------+-------+
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| BookTypeID     | int         | NO   | PRI | NULL    | auto_increment |
+| book_type_name | varchar(40) | NO   |     | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
 2 rows in set (0.00 sec)
 
 mysql> desc Book;
@@ -114,13 +114,12 @@ mysql> desc Book;
 +--------------+-------------+------+-----+---------+-------+
 | ISBN         | varchar(20) | NO   | PRI | NULL    |       |
 | book_name    | varchar(40) | NO   |     | NULL    |       |
-| book_type_id | int         | NO   | MUL | NULL    |       |
 | author       | varchar(40) | NO   |     | NULL    |       |
-| location     | varchar(80) | NO   |     | NULL    |       |
-| status       | varchar(7)  | NO   |     | IN      |       |
-| PublisherID  | int         | NO   | MUL | NULL    |       |
+| location     | varchar(20) | NO   |     | NULL    |       |
+| book_type_id | int         | NO   | MUL | NULL    |       |
+| publisher_id | int         | NO   | MUL | NULL    |       |
 +--------------+-------------+------+-----+---------+-------+
-7 rows in set (0.00 sec)
+6 rows in set (0.00 sec)
 
 mysql> desc Users;
 +------------------+---------------+------+-----+---------+----------------+
@@ -142,32 +141,32 @@ mysql> desc Users;
 12 rows in set (0.00 sec)
 
 mysql> desc Borrow;
-+----------------+-------------+------+-----+---------+-------+
-| Field          | Type        | Null | Key | Default | Extra |
-+----------------+-------------+------+-----+---------+-------+
-| OperationID    | varchar(20) | NO   | PRI | NULL    |       |
-| ReaderID       | varchar(20) | NO   | MUL | NULL    |       |
-| ISBN           | varchar(20) | NO   | MUL | NULL    |       |
-| borrow_time    | date        | NO   |     | NULL    |       |
-| status         | varchar(7)  | NO   |     | NULL    |       |
-| give_back_time | date        | YES  |     | NULL    |       |
-+----------------+-------------+------+-----+---------+-------+
-6 rows in set (0.01 sec)
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| OperationID    | int         | NO   | PRI | NULL    | auto_increment |
+| borrow_time    | datetime(6) | NO   |     | NULL    |                |
+| status         | varchar(7)  | NO   |     | NULL    |                |
+| give_back_time | datetime(6) | YES  |     | NULL    |                |
+| book_id        | varchar(20) | NO   | MUL | NULL    |                |
+| user_id        | int         | NO   | MUL | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
 
 mysql> desc Manage;
-+--------------+-------------+------+-----+---------+-------+
-| Field        | Type        | Null | Key | Default | Extra |
-+--------------+-------------+------+-----+---------+-------+
-| OperationID  | varchar(20) | NO   | PRI | NULL    |       |
-| WorkID       | int         | NO   | MUL | NULL    |       |
-| ISBN         | varchar(20) | NO   | MUL | NULL    |       |
-| operate_type | varchar(20) | NO   |     | NULL    |       |
-| operate_time | date        | NO   |     | NULL    |       |
-+--------------+-------------+------+-----+---------+-------+
-5 rows in set (0.00 sec)
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| OperationID  | int         | NO   | PRI | NULL    | auto_increment |
+| operate_type | varchar(20) | NO   |     | NULL    |                |
+| operate_time | datetime(6) | NO   |     | NULL    |                |
+| book_id      | varchar(20) | NO   | MUL | NULL    |                |
+| user_id      | int         | NO   | MUL | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
 ```
 
-<summary>The Structure of each tables</summary>
+<summary>The Structure of each table</summary>
 </details>
 
 ## Credit System
