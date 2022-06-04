@@ -16,15 +16,6 @@ It's based on _**Python**_, _**Django**_ and _**MySQL**_.
 LibraryInfoManager
 ├── ConnectionTemplate.py
 ├── Django
-│   ├── Admin
-│   │   ├── admin.py
-│   │   ├── apps.py
-│   │   ├── __init__.py
-│   │   ├── migrations
-│   │   │   └── __init__.py
-│   │   ├── models.py
-│   │   ├── tests.py
-│   │   └── views.py
 │   ├── Django
 │   │   ├── asgi.py
 │   │   ├── __init__.py
@@ -61,13 +52,12 @@ LibraryInfoManager
 │       │   ├── __init__.cpython-38.pyc
 │       │   ├── models.cpython-38.pyc
 │       │   ├── urls.cpython-38.pyc
-│       │   ├── utils.cpython-38.pyc
 │       │   └── views.cpython-38.pyc
 │       ├── tests.py
 │       ├── urls.py
-│       ├── utils.py
 │       └── views.py
 ├── InitDBToolkit.py
+├── Initialize.sh
 ├── lib
 │   ├── encrypt.py
 │   ├── __pycache__
@@ -82,7 +72,7 @@ LibraryInfoManager
 │   └── InitData.sql
 └── Test.py
 
-14 directories, 53 files
+12 directories, 45 files
 ```
 </details>
 
@@ -93,8 +83,7 @@ LibraryInfoManager
 - Publisher(**PublisherID**, publisher_name)
 - BookType(**BookTypeID**, book_type_name)
 - Book(**ISBN**, book_name, book_type_id, author, location, status, _PublisherID_)
-- User(**ReaderID**, reader_name, user_name, password, account_status, tel, trustworthiness, max_borrow_day, max_borrow_count)
-- Administrator(**WorkID**, admin_name, user_name, password, tel)
+- User(**UserID**, name, nickname, password, tel, is_admin, is_staff, is_active, last_login, trustworthiness, max_borrow_day, max_borrow_count)
 - Borrow(**OperationID**, _ReaderID_, _ISBN_, borrow_time, status, give_back_time)
 - Manage(**OperationID**, _WorkID_, _ISBN_, operate_type, operate_time)
 
@@ -133,34 +122,24 @@ mysql> desc Book;
 +--------------+-------------+------+-----+---------+-------+
 7 rows in set (0.00 sec)
 
-mysql> desc User;
+mysql> desc Users;
 +------------------+---------------+------+-----+---------+----------------+
 | Field            | Type          | Null | Key | Default | Extra          |
 +------------------+---------------+------+-----+---------+----------------+
-| ReaderID         | int           | NO   | PRI | NULL    | auto_increment |
-| reader_name      | varchar(40)   | NO   |     | NULL    |                |
-| user_name        | varchar(20)   | NO   |     | NULL    |                |
+| UserID           | int           | NO   | PRI | NULL    | auto_increment |
+| name             | varchar(40)   | NO   |     | NULL    |                |
+| nickname         | varchar(20)   | NO   |     | NULL    |                |
 | password         | varchar(1024) | NO   |     | NULL    |                |
-| account_status   | varchar(20)   | NO   |     | NULL    |                |
 | tel              | varchar(11)   | NO   |     | NULL    |                |
-| trustworthiness  | int           | NO   |     | NULL    |                |
-| max_borrow_day   | int           | NO   |     | NULL    |                |
-| max_borrow_count | int           | NO   |     | NULL    |                |
+| is_admin         | tinyint(1)    | NO   |     | NULL    |                |
+| is_staff         | tinyint(1)    | NO   |     | NULL    |                |
+| is_active        | tinyint(1)    | NO   |     | NULL    |                |
 | last_login       | datetime(6)   | NO   |     | NULL    |                |
+| trustworthiness  | int           | YES  |     | NULL    |                |
+| max_borrow_day   | int           | YES  |     | NULL    |                |
+| max_borrow_count | int           | YES  |     | NULL    |                |
 +------------------+---------------+------+-----+---------+----------------+
-10 rows in set (0.00 sec)
-
-mysql> desc Administrator;
-+------------+---------------+------+-----+---------+-------+
-| Field      | Type          | Null | Key | Default | Extra |
-+------------+---------------+------+-----+---------+-------+
-| WorkID     | int           | NO   | PRI | NULL    |       |
-| admin_name | varchar(40)   | NO   |     | NULL    |       |
-| user_name  | varchar(20)   | NO   |     | NULL    |       |
-| password   | varchar(1024) | NO   |     | NULL    |       |
-| tel        | varchar(11)   | NO   |     | NULL    |       |
-+------------+---------------+------+-----+---------+-------+
-5 rows in set (0.00 sec)
+12 rows in set (0.00 sec)
 
 mysql> desc Borrow;
 +----------------+-------------+------+-----+---------+-------+
@@ -216,7 +195,7 @@ $$
 
 To use it, you shall run InitDBToolkit first. 
 
-The next step is to Initial the database, run `python Django/manage.py migrate`.
+The next step is to Initial the database, run `sh Initialize.sh`.
 
 Then run `python Django/manage.py runserver`.
 
