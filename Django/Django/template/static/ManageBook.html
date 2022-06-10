@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% csrf_token %}
 {% load static %}
 {% block title %} 图书管理 {% endblock title %}
 {% block content %}
@@ -26,6 +27,100 @@
         {% endfor %}
     </tbody>
 </table>
-<a type="button" onclick="$('#add_book_type').css('display', 'block');$('#remove_book_type').css('display', 'none');">添加图书种类</a>
-<a type="button" onclick="$('#remove_book_type').css('display', 'block');$('#add_book_type').css('display', 'none');">删除图书种类</a>
+
+<a type="button" onclick="
+    $('#add_book').css('display', 'block');
+    $('#remove_book').css('display', 'none');
+    $('#update_book').css('display', 'none');
+">添加</a>
+<a type="button" onclick="
+    $('#remove_book').css('display', 'block');
+    $('#add_book').css('display', 'none');
+    $('#update_book').css('display', 'none');
+">删除</a>
+<a type="button" onclick="
+    $('#update_book').css('display', 'block');
+    $('#remove_book').css('display', 'none');
+    $('#add_book').css('display', 'none');
+">修改</a>
+
+<div id="add_book" style="display: none;">
+    <form action="post_addbook/" method="post">
+        {% csrf_token %}
+        <label for="ISBN">ISBN：</label><input id="ISBN" type="text" name="add_ISBN"><br>
+        <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name"><br>
+        <label for="author">作者：</label><input id="author" type="text" name="add_author"><br>
+        <label for="location">图书位置：</label><input id="location" type="text" name="add_location"><br>
+        <label for="book_type">图书类别：</label><input id="book_type" type="text" name="add_book_type"><br>
+        <label for="publisher">出版社：</label><input id="publisher" type="text" name="add_publisher"><br>
+        <input type="submit" value="OK">
+    </form>
+</div>
+
+<div id="remove_book" style="display: none;">
+    <form action="post_delbook/" method="post">
+        {% csrf_token %}
+        <label for="ISBN">ISBN：</label>
+        <input id="delISBN" type="text" name="del_ISBN"><br>
+        <input type="submit" value="OK">
+    </form>
+</div>
+
+<div id="update_book" style="display: none;">
+    <form method="get" target="post_channel">
+        {% csrf_token %}
+        <label for="pull_ISBN"></label><input id="pull_ISBN" type="text" name="pull_ISBN">
+        <input id="submit_pull" type="submit" value="查询"><br>
+        <span id="querry_error" style="display: none;">该图书不存在！</span>
+    </form>
+    <form action="post_updatebook/" method="post">
+        {% csrf_token %}
+        <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" value="{{ old_book_info.ISBN }}"><br>
+        <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" value="{{ old_book_info.book_name }}"><br>
+        <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author" value="{{ old_book_info.author }}"><br>
+        <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location" value="{{ old_book_info.location }}"><br>
+        <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type" value="{{ old_book_info.book_type__book_type_name }}"><br>
+        <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher" value="{{ old_book_info.publisher__publisher_name }}"><br>
+        <input type="submit" value="OK">
+    </form>
+    <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
+</div>
 {% endblock content %}
+{% block JsScript %}
+<script>
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+$("#submit_pull").on("click", function pull_book_info() {
+    let pull_ISBN = $('#pull_ISBN').val()
+    const post_data = {
+        "pull_ISBN": pull_ISBN,
+    };
+    $.ajax({
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        url: '/bm/get_book_info',
+        type: "GET",
+        data: post_data,
+        success: (data_json) => {
+            if ($.isEmptyObject(data_json)){
+                $("#update_ISBN").attr("value", "");
+                $("#update_book_name").attr("value", "");
+                $("#update_author").attr("value", "");
+                $("#update_location").attr("value", "");
+                $("#update_book_type").attr("value", "");
+                $("#update_publisher").attr("value", "");
+                $("#querry_error").css("display", "block");
+            } else {
+                $("#update_ISBN").attr("value", data_json['ISBN']);
+                $("#update_book_name").attr("value", data_json['book_name']);
+                $("#update_author").attr("value", data_json['author']);
+                $("#update_location").attr("value", data_json['location']);
+                $("#update_book_type").attr("value", data_json['book_type']);
+                $("#update_publisher").attr("value", data_json['publisher']);
+                $("#querry_error").css("display", "none");
+            }
+        },
+    });
+})
+</script>
+{% endblock JsScript %}
