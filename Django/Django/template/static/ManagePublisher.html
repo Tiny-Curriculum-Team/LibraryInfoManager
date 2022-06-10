@@ -1,8 +1,40 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} 登录 {% endblock title %}
+{% block title %} 出版社管理 {% endblock title %}
 {% block content %}
-<div class="container">
-
+<table class="data_table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>出版社名称</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for atom in publishers %}
+        <tr>
+            <td>{{ atom.PublisherID }}</td>
+            <td>{{ atom.publisher_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a type="button" onclick="$('#add_publisher').css('display', 'block');$('#remove_publisher').css('display', 'none');">添加出版社</a>
+<a type="button" onclick="$('#remove_publisher').css('display', 'block');$('#add_publisher').css('display', 'none');">删除出版社</a>
+<div id="add_publisher" style="display: none;">
+    <span>请按照“[出版社名称]”格式填写，各种类之间用;隔开，「示例」：人民邮电;机械工业</span><br>
+    <form action="post_addpublisher/" method="post">
+        {% csrf_token %}
+        <input id="addpublisher" type="text" name="addPublisher">
+        <input type="submit" value="OK">
+    </form>
+</div>
+<div id="remove_publisher" style="display: none;">
+    <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
+    <form action="post_delpublisher/" method="post">
+        {% csrf_token %}
+        <input id="removepublisher" type="text" name="delPublisher">
+        <input type="submit" value="OK">
+    </form>
+    <span>「温馨提示」：删除某出版社时，相应的图书也会被一并删除，操作需谨慎！</span><br>
 </div>
 {% endblock content %}

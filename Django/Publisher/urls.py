@@ -5,7 +5,7 @@ from . import views
 app_name = 'publishers'
 
 urlpatterns = [
-    path('', views.booktype_view, name='mp'),
-    path('post_addbooktype/', views.add_book_type, name='addType'),
-    path('post_delbooktype/', views.remove_book_type, name='delType'),
+    path('', views.publisher_view, name='mp'),
+    path('post_addpublisher/', views.add_publisher, name='addPublisher'),
+    path('post_delpublisher/', views.remove_publisher, name='delPublisher'),
 ]
