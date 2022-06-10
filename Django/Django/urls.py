@@ -21,4 +21,6 @@ urlpatterns = [
     path('sign/', include('Users.urls')),
     path('btm/', include('BookType.urls')),
     path('pubm/', include('Publisher.urls')),
+    path('usrm/', include('Users.urls')),
+    path('bm/', include('Book.urls')),
 ]

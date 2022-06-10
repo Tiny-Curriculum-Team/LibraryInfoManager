@@ -1,32 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} 登录 {% endblock title %}
+{% block title %} 图书管理 {% endblock title %}
 {% block content %}
-<div class="container">
-  <div class="row justify-content-md-center">
-    <div class="col-6">
-      <br>
-      <form method="post" action="">
-        {% csrf_token %}
-        <!-- Account -->
-        <div class="form-group">
-          <label for="username">账号</label>
-          <input type="text" class="form-control" id="username" name="username">
-        </div>
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password">密码</label>
-          <input type="password" class="form-control" id="password" name="password">
-        </div>
-        <!-- Commit Button -->
-        <button type="submit" class="btn btn-primary">登录</button>
-        <div class="form-group">
-        <br>
-        <h5>还没有账号？ 点击<a href='{% url "users:signup" %}'>注册账号</a>加入我们吧！</h5>
-        <br>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+<table class="data_table">
+    <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>图书名称</th>
+            <th>作者</th>
+            <th>位置</th>
+            <th>图书种类</th>
+            <th>出版社</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in books %}
+        <tr>
+            <td>{{ item.ISBN }}</td>
+            <td>{{ item.book_name }}</td>
+            <td>{{ item.author }}</td>
+            <td>{{ item.location }}</td>
+            <td>{{ item.book_type__book_type_name }}</td>
+            <td>{{ item.publisher__publisher_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a type="button" onclick="$('#add_book_type').css('display', 'block');$('#remove_book_type').css('display', 'none');">添加图书种类</a>
+<a type="button" onclick="$('#remove_book_type').css('display', 'block');$('#add_book_type').css('display', 'none');">删除图书种类</a>
 {% endblock content %}

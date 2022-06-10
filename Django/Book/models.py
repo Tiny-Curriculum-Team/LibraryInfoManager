@@ -7,6 +7,7 @@ class Book(models.Model):
     book_name = models.CharField(null=False, max_length=40)
     author = models.CharField(null=False, max_length=40)
     location = models.CharField(null=False, max_length=20)
+    status = models.CharField(null=False, max_length=5, default='IN')
     book_type = models.ForeignKey('BookType.BookType', on_delete=models.CASCADE)
     publisher = models.ForeignKey('Publisher.Publisher', on_delete=models.CASCADE)
 
