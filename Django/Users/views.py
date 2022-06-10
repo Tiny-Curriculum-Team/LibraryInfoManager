@@ -21,7 +21,7 @@ def user_login(request):
     elif request.method == 'GET':
         user_login_form = UserLoginForm()
         context = {'form': user_login_form}
-        return render(request, 'static/login.html', context)
+        return render(request, 'static/SignIn.html', context)
     else:
         return HttpResponse("请使用GET或POST请求数据")
 
@@ -45,6 +45,6 @@ def user_register(request):
     elif request.method == 'GET':
         user_register_form = UserRegisterForm()
         context = {'form': user_register_form}
-        return render(request, 'static/signup.html', context)
+        return render(request, 'static/SignUp.html', context)
     else:
         return HttpResponse("请使用GET或POST请求数据")

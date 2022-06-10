@@ -7,6 +7,15 @@
         <title>{% block title %}{% endblock title %}</title>
     </head>
     <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                {% if message.tags %}
+                    <li class="{{ message.tags }} sysInfo">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
         <!-- load header.html -->
         {% include 'header.html' %}
         <!-- to load content partitions. -->

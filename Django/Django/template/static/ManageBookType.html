@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} 图书类别管理 {% endblock title %}
+{% block content %}
+<table class="data_table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>图书种类名称</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item_type in booktypes %}
+        <tr>
+            <td>{{ item_type.BookTypeID }}</td>
+            <td>{{ item_type.book_type_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a type="button" onclick="$('#add_book_type').css('display', 'block');$('#remove_book_type').css('display', 'none');">添加图书种类</a>
+<a type="button" onclick="$('#remove_book_type').css('display', 'block');$('#add_book_type').css('display', 'none');">删除图书种类</a>
+<div id="add_book_type" style="display: none;">
+    <span>请按照“[图书种类名称]”格式填写，各种类之间用;隔开，「示例」：计算机类;百科类</span><br>
+    <form action="post_addbooktype/" method="post">
+        {% csrf_token %}
+        <input id="addbooktype" type="text" name="addType">
+        <input type="submit" value="OK">
+    </form>
+</div>
+<div id="remove_book_type" style="display: none;">
+    <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
+    <form action="post_delbooktype/" method="post">
+        {% csrf_token %}
+        <input id="removebooktype" type="text" name="delType">
+        <input type="submit" value="OK">
+    </form>
+    <span>「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！</span><br>
+</div>
+{% endblock content %}
