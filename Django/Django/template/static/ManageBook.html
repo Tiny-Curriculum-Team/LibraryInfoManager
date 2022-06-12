@@ -51,8 +51,10 @@
         <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name"><br>
         <label for="author">作者：</label><input id="author" type="text" name="add_author"><br>
         <label for="location">图书位置：</label><input id="location" type="text" name="add_location"><br>
-        <label for="book_type">图书类别：</label><input id="book_type" type="text" name="add_book_type"><br>
-        <label for="publisher">出版社：</label><input id="publisher" type="text" name="add_publisher"><br>
+<!--        <label for="book_type">图书类别：</label><input id="book_type" type="text" name="add_book_type"><br>-->
+<!--        <label for="publisher">出版社：</label><input id="publisher" type="text" name="add_publisher"><br>-->
+        <label for="book_type_list">图书类别：</label><select id="book_type_list" class="form-control" name="name"></select>
+        <label for="publisher_list">图书类别：</label><select id="publisher_list" class="form-control" name="name"></select>
         <input type="submit" value="OK">
     </form>
 </div>
@@ -89,7 +91,7 @@
 {% block JsScript %}
 <script>
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-$("#submit_pull").on("click", function pull_book_info() {
+$("#submit_pull").on("click", function () {
     let pull_ISBN = $('#pull_ISBN').val()
     const post_data = {
         "pull_ISBN": pull_ISBN,
@@ -118,6 +120,40 @@ $("#submit_pull").on("click", function pull_book_info() {
                 $("#update_book_type").attr("value", data_json['book_type']);
                 $("#update_publisher").attr("value", data_json['publisher']);
                 $("#querry_error").css("display", "none");
+            }
+        },
+    });
+})
+
+$(function (){
+    $.ajax({
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        url: '/bm/get_book_type_list',
+        type: "GET",
+        success: (data_json) => {
+            let item_option;
+            for (let key in data_json) {
+                item_option = document.createElement("option");
+                item_option.innerText = data_json[key];
+                $("#book_type_list").append(item_option);
+            }
+        },
+    });
+
+        $.ajax({
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        url: '/bm/get_publisher_list',
+        type: "GET",
+        success: (data_json) => {
+            let item_option;
+            for (let key in data_json) {
+                item_option = document.createElement("option");
+                item_option.innerText = data_json[key];
+                $("#publisher_list").append(item_option);
             }
         },
     });

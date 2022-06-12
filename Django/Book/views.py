@@ -87,7 +87,6 @@ def update_book(request):
         return redirect("/bm/")
 
 
-
 def book_view(request):
     current_user = request.user
     if current_user.is_anonymous:
@@ -103,3 +102,23 @@ def book_view(request):
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/sign/in/")
+
+
+def pull_book_type_list(request):
+    if request.method == "GET":
+        book_type_list_obj = BookType.objects.all()
+        if book_type_list_obj.exists():
+            book_type_id_list = [item['BookTypeID'] for item in list(book_type_list_obj.values("BookTypeID"))]
+            book_type_name_list = [item['book_type_name'] for item in list(book_type_list_obj.values("book_type_name"))]
+            book_type_list = dict(zip(book_type_id_list, book_type_name_list))
+            return JsonResponse(book_type_list)
+
+
+def pull_publisher_list(request):
+    if request.method == "GET":
+        publisher_list_obj = Publisher.objects.all()
+        if publisher_list_obj.exists():
+            publisher_id_list = [item['PublisherID'] for item in list(publisher_list_obj.values("PublisherID"))]
+            publisher_name_list = [item['publisher_name'] for item in list(publisher_list_obj.values("publisher_name"))]
+            publisher_list = dict(zip(publisher_id_list, publisher_name_list))
+            return JsonResponse(publisher_list)
