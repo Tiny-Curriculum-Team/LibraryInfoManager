@@ -128,7 +128,7 @@ def update_user(request):
         if post_data['update_user_password'] == '':
             pass
         else:
-            user_to_update.set_password(password=post_data['update_user_password'])
+            user_to_update.set_password(post_data['update_user_password'])
         user_to_update.nickname = post_data['update_user_nickname']
         user_to_update.name = post_data['update_user_name']
         user_to_update.tel = post_data['update_user_telephone']
@@ -144,7 +144,6 @@ def update_user(request):
 # 'update_user_name': ['1232131'],
 # 'update_user_telephone': ['12312']
 # }>
-
 
 
 def query_user(request):
