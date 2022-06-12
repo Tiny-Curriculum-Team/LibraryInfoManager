@@ -2,7 +2,171 @@
 {% load static %}
 {% block title %} 用户管理 {% endblock title %}
 {% block content %}
-<div class="container">
+<table class="data_table" id="active_users" style="display:block;">
+    <thead>
+        <tr>
+            <th>账号ID</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>电话</th>
+            <th>最近登录时间</th>
+            <th>账号状态</th>
+            <th>信用点</th>
+            <th>最长可借阅天数</th>
+            <th>最多可借阅本数</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in active_users %}
+        <tr>
+            <td>{{ user.UserID }}</td>
+            <td>{{ user.nickname }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.tel }}</td>
+            <td>{{ user.last_login }}</td>
+            <td>{{ user.is_active }}</td>
+            <td>{{ user.trustworthiness }}</td>
+            <td>{{ user.max_borrow_day }}</td>
+            <td>{{ user.max_borrow_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
+<table class="data_table" id="inactive_users" style="display: none;">
+    <thead>
+        <tr>
+            <th>账号ID</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>电话</th>
+            <th>最近登录时间</th>
+            <th>账号状态</th>
+            <th>信用点</th>
+            <th>最长可借阅天数</th>
+            <th>最多可借阅本数</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in inactive_users %}
+        <tr>
+            <td>{{ user.UserID }}</td>
+            <td>{{ user.nickname }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.tel }}</td>
+            <td>{{ user.last_login }}</td>
+            <td>{{ user.is_active }}</td>
+            <td>{{ user.trustworthiness }}</td>
+            <td>{{ user.max_borrow_day }}</td>
+            <td>{{ user.max_borrow_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a type="button" onclick="
+    $('#update_user').css('display', 'block');
+    $('#remove_user').css('display', 'none');
+    $('#update_user_info').css('display', 'none');
+    $('#restore_user').css('display', 'none');
+">修改</a>
+<a type="button" onclick="
+$('#remove_user').css('display', 'block');
+$('#update_user').css('display', 'none');
+$('#restore_user').css('display', 'none');
+">删除</a>
+<a type="button" id="delNdel">查看已删除用户</a>
+
+<div id="remove_user" style="display: none;">
+    <form action="post_del_user/" method="post">
+        {% csrf_token %}
+        <label for="delUserID">要删除的账号ID：</label>
+            <input id="delUserID" type="text" name="del_UserID"><br>
+        <input type="submit" value="OK">
+    </form>
+</div>
+
+<div id="restore_user" style="display: none;">
+    <form action="post_H_del_user/" method="post">
+        {% csrf_token %}
+        <label for="HdelUserID">要恢复的账号ID：</label>
+            <input id="HdelUserID" type="text" name="del_UserID"><br>
+        <input type="submit" value="OK">
+    </form>
+</div>
+
+<div id="update_user" style="display: none;">
+    <form method="get" target="post_channel">
+        {% csrf_token %}
+        <label for="pull_UserID"></label><input id="pull_UserID" type="text" name="pull_UserID">
+        <input id="submit_pull" type="submit" value="查询"><br>
+        <span id="querry_error" style="display: none;">查无此人！</span>
+    </form>
+    <form id="update_user_info" action="post_update_user_info/" method="post" style="display: none;">
+        {% csrf_token %}
+        <label for="post_const_UserID">账号ID：</label><input id="post_const_UserID" type="text" name="UserID" readonly="true"><br>
+        <label for="update_user_nickname">用户名：</label><input id="update_user_nickname" type="text" name="update_user_nickname"><br>
+        <label for="update_user_password">密码：</label><input id="update_user_password" type="text" name="update_user_password"><br>
+        <label for="update_user_name">姓名：</label><input id="update_user_name" type="text" name="update_user_name"><br>
+        <label for="update_user_telephone">电话：</label><input id="update_user_telephone" type="text" name="update_user_telephone"><br>
+        <input type="submit" value="OK">
+    </form>
+    <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
 </div>
 {% endblock content %}
+
+{% block JsScript %}
+<script>
+    let index = 0
+    $("#delNdel").on("click", function (){
+        $('#remove_user').css('display', 'none');
+        $('#update_user').css('display', 'none');
+        if (index % 2){
+            $("#active_users").css("display", "block");
+            $("#inactive_users").css("display", "none");
+            $("#restore_user").css("display", "none");
+            this.innerHTML = '查看已删除用户';
+        } else {
+            $("#active_users").css("display", "none");
+            $("#inactive_users").css("display", "block");
+            $("#restore_user").css("display", "block");
+            this.innerHTML = '返回';
+        }
+        index++;
+    });
+
+    $("#submit_pull").on("click", function (){
+        let pull_UserID = $('#pull_UserID').val();
+        const post_data = {
+            "pull_UserID": pull_UserID,
+        };
+        $.ajax({
+            // headers: {
+            //     'X-CSRFToken': csrftoken
+            // },
+            url: '/user/manage/get_query_user_info',
+            type: "GET",
+            data: post_data,
+            success: (data_json) => {
+                if ($.isEmptyObject(data_json)){
+                    $('#post_const_UserID').attr("value", "");
+                    $("#update_user_nickname").attr("value", "");
+                    $("#update_user_password").attr("value", "");
+                    $("#update_user_name").attr("value", "");
+                    $("#update_user_telephone").attr("value", "");
+                    $("#querry_error").css("display", "block");
+                    $("#update_user_info").css("display", "none");
+                } else {
+                    $("#post_const_UserID").attr("value", $("#pull_UserID").val())
+                    $("#update_user_nickname").attr("value", data_json['nickname']);
+                    $("#update_user_password").attr("value", "");
+                    $("#update_user_name").attr("value", data_json['name']);
+                    $("#update_user_telephone").attr("value", data_json['tel']);
+                    $("#querry_error").css("display", "none");
+                    $("#update_user_info").css("display", "block");
+                }
+            },
+        });
+    });
+</script>
+{% endblock JsScript %}

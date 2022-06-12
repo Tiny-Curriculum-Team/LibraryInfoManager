@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sign/', include('Users.urls')),
-    path('btm/', include('BookType.urls')),
-    path('pubm/', include('Publisher.urls')),
-    path('usrm/', include('Users.urls')),
-    path('bm/', include('Book.urls')),
+    path('user/', include('Users.urls')),  #
+    path('btm/', include('BookType.urls')),  #
+    path('pubm/', include('Publisher.urls')),  #
+    path('bm/', include('Book.urls')),  # todo: Manage App need to finish
+    # path('brrm/', include('Borrow.urls')),
 ]
+
