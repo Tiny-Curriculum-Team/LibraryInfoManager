@@ -5,5 +5,5 @@ from . import views
 app_name = 'borrow'
 
 urlpatterns = [
-    path('', views.show_recording, name='managePage'),
+    path('', views.show_recordings, name='managePage'),
 ]

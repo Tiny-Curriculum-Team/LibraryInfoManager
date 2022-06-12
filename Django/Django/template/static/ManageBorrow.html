@@ -41,6 +41,14 @@
 <span id="emptyBorrow">现在暂时没有借阅记录！</span>
 {% endif %}
 
+{% if isAdmin %}
+<a type="button">修改记录</a>
+<a type="button">删除记录</a>
+{% else %}
+<a type="button">添加记录</a>
+{% endif %}
+<a type="button">查询记录</a>
+
 {% endblock content %}
 {% block JsScript %}
 <script>

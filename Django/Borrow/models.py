@@ -7,8 +7,8 @@ class Borrow(models.Model):
     user = models.ForeignKey('Users.User', on_delete=models.CASCADE)
     book = models.ForeignKey('Book.Book', on_delete=models.CASCADE)
     borrow_time = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=7)
-    give_back_time = models.DateTimeField(auto_now=True, null=True)
+    status = models.CharField(max_length=8, default="未归还")
+    give_back_time = models.DateTimeField()
 
     class Meta:
         db_table = 'Borrow'
