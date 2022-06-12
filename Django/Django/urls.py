@@ -21,6 +21,7 @@ urlpatterns = [
     path('btm/', include('BookType.urls')),  #
     path('pubm/', include('Publisher.urls')),  #
     path('bm/', include('Book.urls')),  # todo: Manage App need to finish
-    # path('brrm/', include('Borrow.urls')),
+    path('brr/', include('Borrow.urls')),
+    path('', include('MainPanel.urls'))
 ]
 

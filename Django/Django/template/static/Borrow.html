@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} 登录 {% endblock title %}
+{% block content %}
+<table class="data_table">
+    <thead>
+        <tr>
+            <th>操作序列号</th>
+            <th>借阅时间</th>
+            <th>图书状态</th>
+            <th>归还时间</th>
+            <th>借阅图书</th>
+            <th>借阅人</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if borrows %}
+            {% for item in borrows %}
+            <tr>
+                <td>{{ item.OperationID }}</td>
+                <td>{{ item.borrow_time }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.give_back_time }}</td>
+                <td><a class="forBookDetails">{{ item.book_id }}</a></td>
+                <td><a class="forUserDetails">{{ item.user_id }}</a></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td class="borrowEmpty">Empty</td>
+                <td class="borrowEmpty">Empty</td>
+                <td class="borrowEmpty">Empty</td>
+                <td class="borrowEmpty">Empty</td>
+                <td class="borrowEmpty">Empty</td>
+                <td class="borrowEmpty">Empty</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% if not borrows %}
+<span id="emptyBorrow">现在暂时没有借阅记录！</span>
+{% endif %}
+
+{% endblock content %}
+{% block JsScript %}
+<script>
+
+</script>
+{% endblock JsScript %}

@@ -77,7 +77,6 @@ def user_manage(request):
 def remove_user(request):
     if request.method == "POST":
         user_operated_id = request.POST['del_UserID']
-        print(type(user_operated_id))
         if user_operated_id == '1':
             messages.info(request, "用户删除失败，超级管理员不能被删除！")
         else:
@@ -123,7 +122,6 @@ def pull_query_user_info(request):
 def update_user(request):
     if request.method == "POST":
         post_data = request.POST
-        print("##################", post_data)
         user_to_update = User.objects.get(UserID=int(post_data['UserID']))
         if post_data['update_user_password'] == '':
             pass
@@ -135,20 +133,7 @@ def update_user(request):
         user_to_update.save()
         messages.info(request, "用户信息修改成功！")
     return redirect("/user/manage/")
-##################
-# <QueryDict: {
-# 'csrfmiddlewaretoken': [''],
-# 'UserID': ['2'],
-# 'update_user_nickname': ['112312312'],
-# 'update_user_password': [''],
-# 'update_user_name': ['1232131'],
-# 'update_user_telephone': ['12312']
-# }>
 
 
 def query_user(request):
     pass
-
-
-# def add_user(request):
-#     pass

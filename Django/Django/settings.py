@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'BookType',
     'Book',
     'Borrow',
-    'Manage'
+    'Manage',
+    'MainPanel',
 ]
 
 MIDDLEWARE = [
