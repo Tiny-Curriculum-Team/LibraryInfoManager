@@ -42,6 +42,7 @@
     $('#update_book').css('display', 'block');
     $('#remove_book').css('display', 'none');
     $('#add_book').css('display', 'none');
+    $('#update_book_info').css('display', 'none');
 ">修改</a>
 
 <div id="add_book" style="display: none;">
@@ -75,7 +76,7 @@
         <input id="submit_pull" type="submit" value="查询"><br>
         <span id="querry_error" style="display: none;">该图书不存在！</span>
     </form>
-    <form action="post_updatebook/" method="post">
+    <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;">
         {% csrf_token %}
         <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" value="{{ old_book_info.ISBN }}"><br>
         <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" value="{{ old_book_info.book_name }}"><br>
@@ -91,6 +92,7 @@
 {% block JsScript %}
 <script>
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
 $("#submit_pull").on("click", function () {
     let pull_ISBN = $('#pull_ISBN').val()
     const post_data = {
@@ -112,6 +114,7 @@ $("#submit_pull").on("click", function () {
                 $("#update_book_type").attr("value", "");
                 $("#update_publisher").attr("value", "");
                 $("#querry_error").css("display", "block");
+                $("#update_book_info").css("display", "none");
             } else {
                 $("#update_ISBN").attr("value", data_json['ISBN']);
                 $("#update_book_name").attr("value", data_json['book_name']);
@@ -120,6 +123,7 @@ $("#submit_pull").on("click", function () {
                 $("#update_book_type").attr("value", data_json['book_type']);
                 $("#update_publisher").attr("value", data_json['publisher']);
                 $("#querry_error").css("display", "none");
+                $("#update_book_info").css("display", "block");
             }
         },
     });
