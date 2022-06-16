@@ -121,18 +121,19 @@ $('#restore_user').css('display', 'none');
     $("#delNdel").on("click", function (){
         $('#remove_user').css('display', 'none');
         $('#update_user').css('display', 'none');
-        if (index % 2){
+        if (index){
             $("#active_users").css("display", "block");
             $("#inactive_users").css("display", "none");
             $("#restore_user").css("display", "none");
             this.innerHTML = '查看已删除用户';
+            index = 0;
         } else {
             $("#active_users").css("display", "none");
             $("#inactive_users").css("display", "block");
             $("#restore_user").css("display", "block");
             this.innerHTML = '返回';
+            index = 1;
         }
-        index++;
     });
 
     $("#submit_pull").on("click", function (){
@@ -141,9 +142,6 @@ $('#restore_user').css('display', 'none');
             "pull_UserID": pull_UserID,
         };
         $.ajax({
-            // headers: {
-            //     'X-CSRFToken': csrftoken
-            // },
             url: '/user/manage/get_query_user_info',
             type: "GET",
             data: post_data,

@@ -3,7 +3,7 @@
 {% block title %} 图书类别管理 {% endblock title %}
 {% block content %}
 <style>
-       .su-btn{
+    .su-btn{
         border-color:skyblue;
         background-color:#D9F2F4;
         color:#FA9193;
@@ -13,9 +13,9 @@
         height:50px;
         margin-top:5px;
     }
-       #removebooktype{
-           margin-top:20px;
-       }
+    #removebooktype{
+       margin-top:20px;
+    }
 </style>
 <table class="data_table table table-striped container">
     <thead>
@@ -49,11 +49,11 @@
       </div>
       <div class="modal-body">
         <span>请按照“[图书种类名称]”格式填写，各种类之间用;隔开，「示例」：计算机类;百科类</span><br>
-    <form action="post_addbooktype/" method="post" style="margin-top:20px">
-        {% csrf_token %}
-        <input type="text" name="addType" class="form-control" aria-label="With textarea"><br>
-        <input type="submit" value="OK" class="su-btn" style="float:right">
-    </form>
+        <form action="post_addbooktype/" method="post" style="margin-top:20px">
+            {% csrf_token %}
+            <input type="text" name="addType" class="form-control" aria-label="With textarea"><br>
+            <input type="submit" value="OK" class="su-btn" style="float:right">
+        </form>
       </div>
     </div>
   </div>
@@ -80,14 +80,14 @@
       </div>
       <div class="modal-body">
         <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
-    <form action="post_delbooktype/" method="post">
-        {% csrf_token %}
-        <input id="removebooktype" type="text" name="delType" class="form-control" aria-label="With textarea"><br>
-        <input type="submit" value="OK" class="su-btn" style="float:right">
-    </form>
-          <div class="alert alert-warning" role="alert" style="margin-top:60px;">
-  「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！
-</div>
+        <form action="post_delbooktype/" method="post">
+            {% csrf_token %}
+            <input id="removebooktype" type="text" name="delType" class="form-control" aria-label="With textarea"><br>
+            <input type="submit" value="OK" class="su-btn" style="float:right">
+        </form>
+        <div class="alert alert-warning" role="alert" style="margin-top:60px;">
+            「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！
+        </div>
 <!--    <span>「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！</span>-->
       </div>
     </div>

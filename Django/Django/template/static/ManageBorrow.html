@@ -95,7 +95,7 @@
 {% endblock content %}
 {% block JsScript %}
 <script>
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 $("#submit_pull").on("click", function () {
     let pull_operate_id = $('#pull_operate_id').val()
@@ -104,7 +104,7 @@ $("#submit_pull").on("click", function () {
     };
     $.ajax({
         headers: {
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrf_token
         },
         url: '/brr/get_borrow_info',
         type: "GET",
