@@ -21,7 +21,7 @@
         margin-bottom:50px;
     }
     .co{
-        margin-top:20px;
+        margin-top:40px;
     }
     .btn{
         margin-left:60px;
@@ -91,7 +91,8 @@
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
 </div>
    </div>
-    <table class="data_table table">
+   <div class="book-roll panel-footer" style="height:600px;overflow: auto;margin-top:30px;">
+        <table class="data_table table" id="userTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">ISBN</th>
@@ -115,6 +116,7 @@
         {% endfor %}
     </tbody>
 </table>
+   </div>
 </div>
 {% endblock content %}
 {% block JsScript %}
