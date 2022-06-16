@@ -41,7 +41,7 @@ def remove_book(request):
         except:
             messages.info(request, "图书删除失败！可能原因是已经删除或者不存在该图书！")
             return redirect("/bm/")
-        finally:
+        else:
             messages.info(request, "图书删除成功！")
             return redirect("/bm/")
 
@@ -91,7 +91,7 @@ def book_view(request):
     current_user = request.user
     if current_user.is_anonymous:
         messages.info(request, "由于您还未登录，故访问被拒绝！")
-        return redirect("/sign/in/")
+        return redirect("/user/sign_in/")
     elif current_user.is_admin:
         books = Book.objects.all().values(
             'ISBN', 'book_name', 'author', 'location', 'status',
@@ -101,7 +101,7 @@ def book_view(request):
         return render(request, 'static/ManageBook.html', {'books': books})
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
-        return redirect("/sign/in/")
+        return redirect("/user/sign_in/")
 
 
 def pull_book_type_list(request):

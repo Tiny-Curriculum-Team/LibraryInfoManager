@@ -63,7 +63,7 @@
 <div id="remove_book" style="display: none;">
     <form action="post_delbook/" method="post">
         {% csrf_token %}
-        <label for="ISBN">ISBN：</label>
+        <label for="delISBN">ISBN：</label>
         <input id="delISBN" type="text" name="del_ISBN"><br>
         <input type="submit" value="OK">
     </form>
@@ -78,12 +78,12 @@
     </form>
     <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;">
         {% csrf_token %}
-        <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" value="{{ old_book_info.ISBN }}"><br>
-        <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" value="{{ old_book_info.book_name }}"><br>
-        <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author" value="{{ old_book_info.author }}"><br>
-        <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location" value="{{ old_book_info.location }}"><br>
-        <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type" value="{{ old_book_info.book_type__book_type_name }}"><br>
-        <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher" value="{{ old_book_info.publisher__publisher_name }}"><br>
+        <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN"><br>
+        <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name"><br>
+        <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author"><br>
+        <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location"><br>
+        <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type"><br>
+        <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher"><br>
         <input type="submit" value="OK">
     </form>
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
@@ -91,7 +91,7 @@
 {% endblock content %}
 {% block JsScript %}
 <script>
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 $("#submit_pull").on("click", function () {
     let pull_ISBN = $('#pull_ISBN').val()
@@ -100,7 +100,7 @@ $("#submit_pull").on("click", function () {
     };
     $.ajax({
         headers: {
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrf_token
         },
         url: '/bm/get_book_info',
         type: "GET",
@@ -132,7 +132,7 @@ $("#submit_pull").on("click", function () {
 $(function (){
     $.ajax({
         headers: {
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrf_token
         },
         url: '/bm/get_book_type_list',
         type: "GET",
@@ -148,7 +148,7 @@ $(function (){
 
         $.ajax({
         headers: {
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrf_token
         },
         url: '/bm/get_publisher_list',
         type: "GET",
