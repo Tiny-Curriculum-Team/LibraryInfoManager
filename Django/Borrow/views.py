@@ -1,7 +1,10 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+import datetime
+import json
 from .models import Borrow
+from Book.models import Book
 
 
 # Create your views here.
@@ -18,9 +21,25 @@ def show_recordings(request):
     return render(request, 'static/ManageBorrow.html', {'borrows': borrows, 'isAdmin': current_user.is_admin})
 
 
+def order_book_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    else:
+        books = Book.objects.all().values(
+            'ISBN', 'book_name', 'author', 'location', 'status',
+            'book_type__book_type_name',
+            'publisher__publisher_name'
+        )
+        return render(request, 'static/OrderBook.html', {'books': books})
+
+
 def pull_borrow_info(request):
     if request.method == "GET":
         pull_operate_id = request.GET['pull_operate_id']
+        if not pull_operate_id:
+            return JsonResponse({})
         query_obj = Borrow.objects.filter(OperationID=pull_operate_id)
         if query_obj.exists():
             data = {
@@ -49,7 +68,6 @@ def update_recording(request):
 
 def remove_recording(request):
     if request.method == 'POST':
-        print("###############################", request.POST)
         del_recording = int(request.POST['del_recording'])
         try:
             item = Borrow.objects.filter(OperationID=del_recording)
@@ -63,7 +81,20 @@ def remove_recording(request):
 
 
 def add_recordings(request):
-    pass
+    if request.method == "POST":
+        days_and_items = list(json.loads(json.dumps(request.POST)).values())
+        borrow_days = int(days_and_items[0])
+        selected = days_and_items[1:]
+        give_back_time = datetime.datetime.now() + datetime.timedelta(days=borrow_days)
+        for book_id in selected:
+            borrow_item = Borrow(
+                give_back_time=give_back_time,
+                book_id=book_id,
+                user_id=request.user.UserID
+            )
+            borrow_item.save()
+        messages.info(request, "借阅成功！记得按时归还哦！")
+    return JsonResponse({})
 
 
 def query_recording(request):

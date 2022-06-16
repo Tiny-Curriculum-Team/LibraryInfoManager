@@ -47,11 +47,6 @@
     $('#remove_recording').css('display', 'none');
 ">修改记录</a>
 
-<a type="button" onclick="
-    $('#remove_recording').css('display', 'block');
-    $('#update_recording').css('display', 'none');
-">删除记录</a>
-
 <div id="update_recording" style="display: none;">
     <form method="get" target="post_channel">
         {% csrf_token %}
@@ -75,6 +70,11 @@
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
 </div>
 
+<a type="button" onclick="
+    $('#remove_recording').css('display', 'block');
+    $('#update_recording').css('display', 'none');
+">删除记录</a>
+
 <div id="remove_recording" style="display: none;">
     <form action="post_del_recording/" method="post">
         {% csrf_token %}
@@ -85,8 +85,11 @@
 </div>
 
 {% else %}
-<a type="button">添加记录</a>
+
+<a type="button">图书借阅</a>
+
 {% endif %}
+
 <a type="button">查询记录</a>
 
 {% endblock content %}
