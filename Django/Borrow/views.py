@@ -9,6 +9,17 @@ from Book.models import Book
 from Users.models import User
 
 
+# todo list: 1. set books' status when borrowed. And when the books were given back, the status should be reset.
+#            2. disable those books that have been borrowed.
+#            3. show user credit.
+#            4. decrease the credit of those user who were unable to give back books.
+#            5. connect the credit with max_borrow_count and max_borrow_day.
+#            6. credit compute system.
+#            7. complex query.
+#            8. finish the router.
+#            9. Test the whole system.
+
+
 # Create your views here.
 def show_recordings(request):
     current_user = request.user
