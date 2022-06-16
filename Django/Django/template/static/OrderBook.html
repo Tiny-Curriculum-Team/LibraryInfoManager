@@ -30,10 +30,13 @@
 </table>
 
 <div id="select_all_books_to_order">
-    {% csrf_token %}
-    <input id="borrow_days" type="text" oninput="value=value.replace(/[^\d]/g,'')" value="" name="borrow_days">
-    <input id="select_books" type="submit" value="借阅图书">
-    <span id="querry_error" style="display: none;">不存在此操作记录！</span>
+    <form method="post">
+        {% csrf_token %}
+        <label for="borrow_days"></label>借阅天数：
+        <input id="borrow_days" type="text"
+               oninput="value=value.replace(/[^\d]/g,'')" name="borrow_days">
+        <input id="select_books" type="submit" value="借阅图书">
+    </form>
 </div>
 
 
@@ -41,6 +44,7 @@
 {% block JsScript %}
 <script>
 const csrf_token = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+
 $("#select_books").on("click", function (){
     let days_and_items = {};
     days_and_items[0] = $("#borrow_days").val()
@@ -57,7 +61,14 @@ $("#select_books").on("click", function (){
         type: "POST",
         traditional: true,
         data: days_and_items,
-        success: () => {},
+        success: (res) => {
+            if(res['success']){
+                alert("「系统提示」：借阅成功！记得按时归还哦！");
+            } else {
+                alert("「系统提示」：借阅失败！你的借阅时间不能超过" + res['max_borrow_day'] +
+                    "天，而且借阅本数不能超过" + res['max_borrow_count'] + "本！");
+            }
+        }
     });
 })
 </script>

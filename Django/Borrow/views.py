@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-import datetime
+from django.utils.timezone import now
+from datetime import timedelta
 import json
 from .models import Borrow
 from Book.models import Book
+from Users.models import User
 
 
 # Create your views here.
@@ -83,18 +85,31 @@ def remove_recording(request):
 def add_recordings(request):
     if request.method == "POST":
         days_and_items = list(json.loads(json.dumps(request.POST)).values())
+        user_id = int(request.user.UserID)
         borrow_days = int(days_and_items[0])
         selected = days_and_items[1:]
-        give_back_time = datetime.datetime.now() + datetime.timedelta(days=borrow_days)
-        for book_id in selected:
-            borrow_item = Borrow(
-                give_back_time=give_back_time,
-                book_id=book_id,
-                user_id=request.user.UserID
-            )
-            borrow_item.save()
-        messages.info(request, "借阅成功！记得按时归还哦！")
-    return JsonResponse({})
+
+        number_of_books = len(selected)
+        max_borrow_day = int(User.objects.filter(UserID=user_id).values("max_borrow_day")[0]["max_borrow_day"])
+        max_borrow_count = int(User.objects.filter(UserID=user_id).values("max_borrow_count")[0]["max_borrow_count"])
+
+        if number_of_books <= max_borrow_count and borrow_days <= max_borrow_day:
+            give_back_time = now() + timedelta(days=borrow_days)
+            for book_id in selected:
+                borrow_item = Borrow(
+                    give_back_time=give_back_time,
+                    book_id=book_id,
+                    user_id=user_id
+                )
+                borrow_item.save()
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({
+                "success": False,
+                "max_borrow_day": max_borrow_day,
+                "max_borrow_count": max_borrow_count
+            })
+    return redirect("/brr/order/")
 
 
 def query_recording(request):
