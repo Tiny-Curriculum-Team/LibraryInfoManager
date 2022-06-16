@@ -38,7 +38,6 @@ def pull_borrow_info(request):
 
 def update_recording(request):
     if request.method == 'POST':
-        print("###############################", request.POST)
         update_operate_id = int(request.POST['update_operate_id'])
         update_obj = Borrow.objects.get(OperationID=update_operate_id)
         update_obj.status = request.POST['update_status']
@@ -50,9 +49,10 @@ def update_recording(request):
 
 def remove_recording(request):
     if request.method == 'POST':
-        del_recording = request.POST['del_recording']
+        print("###############################", request.POST)
+        del_recording = int(request.POST['del_recording'])
         try:
-            item = Borrow.objects.filter(ISBN=del_recording)
+            item = Borrow.objects.filter(OperationID=del_recording)
             item.delete()
         except:
             messages.info(request, "图书删除失败！可能原因是已经删除或者不存在该图书！")
