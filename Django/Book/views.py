@@ -89,19 +89,36 @@ def update_book(request):
 
 def book_view(request):
     current_user = request.user
+    conditions = dict()
     if current_user.is_anonymous:
         messages.info(request, "由于您还未登录，故访问被拒绝！")
         return redirect("/user/sign_in/")
-    elif current_user.is_admin:
-        books = Book.objects.all().values(
-            'ISBN', 'book_name', 'author', 'location', 'status',
-            'book_type__book_type_name',
-            'publisher__publisher_name'
-        )
-        return render(request, 'static/ManageBook.html', {'books': books, 'isAdmin': current_user.is_admin})
-    else:
+    elif not current_user.is_admin:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/user/sign_in/")
+    try:
+        ISBN = request.POST['ISBN_book']
+        book_name = request.POST["bkn"]
+        author = request.POST["writer_name"]
+        book_type = request.POST["book_type"]
+        press = request.POST["press"]
+        if ISBN:
+            conditions['ISBN'] = ISBN
+        if book_name:
+            conditions['book_name__icontains'] = book_name
+        if author:
+            conditions['author__icontains'] = author
+        if book_type:
+            conditions["book_type__book_type_name__icontains"] = book_type
+        if press:
+            conditions['publisher__publisher_name__icontains'] = press
+    except Exception as e:
+        print(e)
+
+    books = Book.objects.filter(**conditions).values('ISBN', 'book_name', 'author', 'location', 'status',
+            'book_type__book_type_name',
+            'publisher__publisher_name')
+    return render(request, 'static/ManageBook.html', {'books': books, 'isAdmin': current_user.is_admin})
 
 
 def pull_book_type_list(request):

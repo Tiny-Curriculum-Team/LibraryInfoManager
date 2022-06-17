@@ -79,11 +79,11 @@ def user_manage(request):
             condition_d['UserID'] = int(user_id)
             condition_u['UserID'] = int(user_id)
         if user_name:
-            condition_d["name"] = user_name
-            condition_u["name"] = user_name
+            condition_d["name__icontains"] = user_name
+            condition_u["name__icontains"] = user_name
         if name:
-            condition_u["nickname"] = name
-            condition_d["nickname"] = name
+            condition_u["nickname__icontains"] = name
+            condition_d["nickname__icontains"] = name
         if phone:
             condition_d["tel"] = phone
             condition_u["tel"] = phone
