@@ -69,13 +69,48 @@
     $('#remove_user').css('display', 'none');
     $('#update_user_info').css('display', 'none');
     $('#restore_user').css('display', 'none');
+    $('#quert_user').css('display','none');
 ">修改</a>
 <a type="button" onclick="
 $('#remove_user').css('display', 'block');
 $('#update_user').css('display', 'none');
 $('#restore_user').css('display', 'none');
+$('#quert_user').css('display','none');
 ">删除</a>
 <a type="button" id="delNdel">查看已删除用户</a>
+<a type="button" onclick="
+    $('#update_user').css('display', 'none');
+    $('#remove_user').css('display', 'none');
+    $('#update_user_info').css('display', 'none');
+    $('#restore_user').css('display', 'none');
+    $('#query_user').css('display','block');
+">查找现有用户</a>
+
+<div id = "query_user" style="display: none;">
+    <form id="query_db" action="" method="post" onsubmit="return save();">
+         {% csrf_token %}
+        <p>
+            <label for="user_id">账号ID：</label><input id="user_id" type="text" name="user_id" placeholder="指定账号ID,默认不限">
+        </p>
+        <p>
+            <label for="user_name">用户名：</label><input id="user_name" type="text" name="user_name" placeholder="指定用户名,默认不限">
+        </p>
+        <p>
+            <label for="name">姓名：</label><input id="name" type="text" name="name" placeholder="指定姓名,默认不限">
+        </p>
+        <p>
+            <label for="phone">电话：</label><input id="phone" type="text" name="phone" placeholder="指定电话,默认不限">
+        </p>
+        <p>
+            <label for="time">近日登录时间：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+        </p>
+        <p>
+            <label for="min_point">信用点范围：</label><input id="min_point" type="text" name="min_point" placeholder="输入最小值,范围0—100">——
+            <label for="max_point"></label><input id="max_point" type="text" name="max_point" placeholder="输入最大值,范围0—100">
+        </p>
+        <input id="submit_post" type="submit" value="查询">
+    </form>
+</div>
 
 <div id="remove_user" style="display: none;">
     <form action="post_del_user/" method="post">

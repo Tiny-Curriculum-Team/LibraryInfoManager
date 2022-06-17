@@ -50,6 +50,7 @@
 <a type="button" class="btn btn-outline-primary" onclick="
     $('#update_recording').css('display', 'block');
     $('#remove_recording').css('display', 'none');
+    $('#query_recording').css('display','none');
 ">修改记录</a>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   修改
@@ -76,8 +77,10 @@
         <label for="update_operate_id">操作序列号：</label><input id="update_operate_id" type="text" name="update_operate_id" readonly="true"><br>
         <label for="update_borrow_time">借阅时间：</label><input id="update_borrow_time" type="text" name="update_borrow_time" readonly="true"><br>
         <label for="update_status">图书状态：</label><select id="update_status" type="text" name="update_status" readonly="true">
-            <option>未归还</option>
-            <option>已归还</option>
+            <option>在借</option>
+            <option>归还</option>
+            <option>损坏</option>
+            <option>丢失</option>
         </select><br>
         <label for="update_back_time">归还时间：</label><input id="update_back_time" type="text" name="update_back_time" readonly="true"><br>
         <label for="update_book_ISBN">借阅图书：</label><input id="update_book_ISBN" type="text" name="update_book_ISBN" readonly="true"><br>
@@ -104,13 +107,44 @@
     </form>
 </div>
 
+
 {% else %}
 
 <a type="button">图书借阅</a>
 
 {% endif %}
 
-<a type="button">查询记录</a>
+<a type="button" onclick="
+    $('#query_recording').css('display','block');
+    $('#update_recording').css('display', 'none');
+    $('#remove_recording').css('display', 'none');
+">查询记录</a>
+
+<div id="query_recording" style="display: none;">
+    <form id="query_db" action="" method="post" onsubmit="return save();">
+        {% csrf_token %}
+        <p>
+            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+        </p>
+        <p>
+            <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">
+                <option>不限</option>
+                <option>在借</option>
+                <option>归还</option>
+                <option>丢失</option>
+                <option>损坏</option>
+                <option>迟交</option>
+            </select>
+        </p>
+        <p>
+            <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
+        </p>
+        <p>
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
+        </p>
+        <input id="submit_post" type="submit" value="查询">
+    </form>
+</div>
 
 {% endblock content %}
 {% block JsScript %}

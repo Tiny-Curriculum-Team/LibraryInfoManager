@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model, authenticate
+import datetime
 from .forms import UserLoginForm, UserRegisterForm
 from .models import User
 
@@ -54,24 +55,62 @@ def user_register(request):
 
 def user_manage(request):
     current_user = request.user
+    condition_u = dict()
+    condition_d = dict()
+    print(request.POST)
     if current_user.is_anonymous:
         messages.info(request, "由于您还未登录，故访问被拒绝！")
         return redirect("/user/sign_in/")
     elif current_user.is_admin:
-        users = User.objects.filter(is_active=True).values(
-            'UserID', 'name', 'nickname', 'tel',
-            'is_active', 'last_login', 'trustworthiness',
-            'max_borrow_day', 'max_borrow_count',
-        )
-        del_users = User.objects.filter(is_active=False).values(
-            'UserID', 'name', 'nickname', 'tel',
-            'is_active', 'last_login', 'trustworthiness',
-            'max_borrow_day', 'max_borrow_count',
-        )
-        return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users})
+        condition_u['is_active'] = True
+        condition_d['is_active'] = False
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/user/sign_in/")
+    try:
+        user_id = request.POST['user_id']
+        user_name = request.POST['user_name']
+        name = request.POST['name']
+        phone = request.POST['phone']
+        time = request.POST['time']
+        min_point = request.POST['min_point']
+        max_point = request.POST['max_point']
+        if user_id:
+            condition_d['UserID'] = int(user_id)
+            condition_u['UserID'] = int(user_id)
+        if user_name:
+            condition_d["name"] = user_name
+            condition_u["name"] = user_name
+        if name:
+            condition_u["nickname"] = name
+            condition_d["nickname"] = name
+        if phone:
+            condition_d["tel"] = phone
+            condition_u["tel"] = phone
+        if time:
+            now = datetime.datetime.now()
+            end = now - datetime.timedelta(days=int(time))
+            condition_u["last_login__range"] = (end, now)
+            condition_d["last_login__range"] = (end, now)
+        if min_point:
+            condition_d["trustworthiness__gte"] = int(min_point)
+            condition_u["trustworthiness__gte"] = int(min_point)
+        if max_point:
+            condition_d["trustworthiness__lte"] = int(max_point)
+            condition_u["trustworthiness__lte"] = int(max_point)
+    except Exception as e:
+        print(e)
+    users = User.objects.filter(**condition_u).values(
+        'UserID', 'name', 'nickname', 'tel',
+        'is_active', 'last_login', 'trustworthiness',
+        'max_borrow_day', 'max_borrow_count')
+    # print(users)
+    del_users = User.objects.filter(**condition_d).values(
+        'UserID', 'name', 'nickname', 'tel',
+        'is_active', 'last_login', 'trustworthiness',
+        'max_borrow_day', 'max_borrow_count')
+    print(condition_u, "\n$$$$$$$$$$$$$$$$$conditions$$$$$$$$$$$$$$$$$$\n", condition_d)
+    return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users, 'isAdmin': current_user.is_admin})
 
 
 def remove_user(request):
@@ -146,7 +185,7 @@ def user_profile_view(request):
             'last_login', 'trustworthiness',
             'max_borrow_day', 'max_borrow_count',
         )
-        return render(request, 'static/UserProfile.html', {'User': user[0]})
+        return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/user/sign_in/")
@@ -177,8 +216,3 @@ def update_user_password(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"success": False})
-
-
-
-def query_user(request):
-    pass
