@@ -124,7 +124,7 @@
     <form id="query_db" action="" method="post" onsubmit="return save();">
         {% csrf_token %}
         <p>
-            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <p>
             <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">
@@ -140,7 +140,7 @@
             <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
         </p>
         <p>
-            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <input id="submit_post" type="submit" value="查询">
     </form>

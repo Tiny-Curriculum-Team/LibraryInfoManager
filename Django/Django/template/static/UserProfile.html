@@ -38,7 +38,7 @@
   <div class="form-group row">
         <label for="profile_tel" class="col-form-label col-form-label-lg">电话&#12288;：</label>
         <div class="col-sm-10">
-            <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}" class="form-control form-control-lg">
+            <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}" class="form-control form-control-lg" oninput="value=value.replace(/[^\d]/g,'')">
         </div>
   </div>
   <div class="form-group row">

@@ -21,7 +21,7 @@
                 <!-- Telephone Number-->
                 <div class="form-group">
                     <label for="tel">手机号</label>
-                    <input type="text" class="form-control" id="tel" name="tel" required>
+                    <input type="text" class="form-control" id="tel" name="tel" oninput="value=value.replace(/[^\d]/g,'')" required>
                 </div>
                 <!-- Password -->
                 <div class="form-group">

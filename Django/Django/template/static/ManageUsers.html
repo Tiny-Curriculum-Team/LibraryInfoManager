@@ -99,14 +99,14 @@ $('#quert_user').css('display','none');
             <label for="name">姓名：</label><input id="name" type="text" name="name" placeholder="指定姓名,默认不限">
         </p>
         <p>
-            <label for="phone">电话：</label><input id="phone" type="text" name="phone" placeholder="指定电话,默认不限">
+            <label for="phone">电话：</label><input id="phone" type="text" name="phone" placeholder="指定电话,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <p>
-            <label for="time">近日登录时间：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+            <label for="time">近日登录时间：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <p>
-            <label for="min_point">信用点范围：</label><input id="min_point" type="text" name="min_point" placeholder="输入最小值,范围0—100">——
-            <label for="max_point"></label><input id="max_point" type="text" name="max_point" placeholder="输入最大值,范围0—100">
+            <label for="min_point">信用点范围：</label><input id="min_point" type="text" name="min_point" placeholder="输入最小值,范围0—100" oninput="value=value.replace(/[^\d]/g,'')">——
+            <label for="max_point"></label><input id="max_point" type="text" name="max_point" placeholder="输入最大值,范围0—100" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <input id="submit_post" type="submit" value="查询">
     </form>
@@ -143,7 +143,7 @@ $('#quert_user').css('display','none');
         <label for="update_user_nickname">用户名：</label><input id="update_user_nickname" type="text" name="update_user_nickname"><br>
         <label for="update_user_password">密码：</label><input id="update_user_password" type="text" name="update_user_password"><br>
         <label for="update_user_name">姓名：</label><input id="update_user_name" type="text" name="update_user_name"><br>
-        <label for="update_user_telephone">电话：</label><input id="update_user_telephone" type="text" name="update_user_telephone"><br>
+        <label for="update_user_telephone">电话：</label><input id="update_user_telephone" type="text" name="update_user_telephone" oninput="value=value.replace(/[^\d]/g,'')"><br>
         <input type="submit" value="OK">
     </form>
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
