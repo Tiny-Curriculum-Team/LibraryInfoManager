@@ -6,26 +6,26 @@
     <thead>
         <tr>
             <th></th>
-            <th>图书状态</th>
             <th>ISBN</th>
             <th>图书名称</th>
             <th>作者</th>
             <th>位置</th>
             <th>图书种类</th>
             <th>出版社</th>
+            <th>图书状态</th>
         </tr>
     </thead>
     <tbody>
         {% for item in books %}
         <tr>
             <td><input class="selected_book_item" type="checkbox" id="{{ item.ISBN }}"></td>
-            <td>{{ item.status }}</td>
             <td>{{ item.ISBN }}</td>
             <td>{{ item.book_name }}</td>
             <td>{{ item.author }}</td>
             <td>{{ item.location }}</td>
             <td>{{ item.book_type__book_type_name }}</td>
             <td>{{ item.publisher__publisher_name }}</td>
+            <td>{{ item.status }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -47,7 +47,7 @@ const csrf_token = document.querySelector('[name="csrfmiddlewaretoken"]').value;
 
 $(function (){
     $('.selected_book_item').each(function (atom){
-        if ($(this).parent().next().text() === 'OUT'){
+        if ($(this).parent().parent().children(":last-child").text() === 'OUT'){
             $(this).attr("disabled", true);
         }
     })
