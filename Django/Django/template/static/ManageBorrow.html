@@ -48,15 +48,6 @@
     $('#query_recording').css('display','none');
 ">修改记录</a>
 
-<<<<<<< HEAD
-<a type="button" onclick="
-    $('#remove_recording').css('display', 'block');
-    $('#update_recording').css('display', 'none');
-    $('#query_recording').css('display','none');
-">删除记录</a>
-
-=======
->>>>>>> 2e497330b25de441eec95d832e2cd41d4e86909e
 <div id="update_recording" style="display: none;">
     <form method="get" target="post_channel">
         {% csrf_token %}
@@ -111,12 +102,10 @@
     <form id="query_db" action=" " method="post" onsubmit="return save();">
         {% csrf_token %}
         <p>
-            近日借阅:
-            <label for="time">近日借阅</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
         </p>
         <p>
-            图书状态:
-            <label for="state">图书状态</label><select id="state" type="text" name="state" readonly="true">
+            <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">
                 <option>不限</option>
                 <option>损坏</option>
                 <option>丢失</option>
@@ -125,12 +114,10 @@
             </select>
         </p>
         <p>
-            借阅图书:
-            <label for="book">借阅图书</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
+            <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
         </p>
         <p>
-            借阅人：
-            <label for="person">借阅人</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
         </p>
         <input id="submit_post" type="submit" value="查询">
     </form>
@@ -195,7 +182,7 @@ $("#submit_post").on("click",function(){
         headers:{
             'X-CSRFToken':csrftoken
         },
-        url:'',
+        url:'/brr/manage/',
         type:"POST",
         data:post_select,
     })
