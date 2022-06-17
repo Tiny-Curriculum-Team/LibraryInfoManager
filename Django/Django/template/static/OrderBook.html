@@ -6,6 +6,7 @@
     <thead>
         <tr>
             <th></th>
+            <th>图书状态</th>
             <th>ISBN</th>
             <th>图书名称</th>
             <th>作者</th>
@@ -18,6 +19,7 @@
         {% for item in books %}
         <tr>
             <td><input class="selected_book_item" type="checkbox" id="{{ item.ISBN }}"></td>
+            <td>{{ item.status }}</td>
             <td>{{ item.ISBN }}</td>
             <td>{{ item.book_name }}</td>
             <td>{{ item.author }}</td>
@@ -30,13 +32,11 @@
 </table>
 
 <div id="select_all_books_to_order">
-    <form method="post">
-        {% csrf_token %}
-        <label for="borrow_days"></label>借阅天数：
-        <input id="borrow_days" type="text"
-               oninput="value=value.replace(/[^\d]/g,'')" name="borrow_days">
-        <input id="select_books" type="submit" value="借阅图书">
-    </form>
+    {% csrf_token %}
+    <label for="borrow_days"></label>借阅天数：
+    <input id="borrow_days" type="text"
+           oninput="value=value.replace(/[^\d]/g,'')" name="borrow_days">
+    <input id="select_books" type="submit" value="借阅图书">
 </div>
 
 
@@ -44,6 +44,14 @@
 {% block JsScript %}
 <script>
 const csrf_token = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+$(function (){
+    $('.selected_book_item').each(function (atom){
+        if ($(this).parent().next().text() === 'OUT'){
+            $(this).attr("disabled", true);
+        }
+    })
+})
 
 $("#select_books").on("click", function (){
     let days_and_items = {};
@@ -68,6 +76,7 @@ $("#select_books").on("click", function (){
                 alert("「系统提示」：借阅失败！你的借阅时间不能超过" + res['max_borrow_day'] +
                     "天，而且借阅本数不能超过" + res['max_borrow_count'] + "本！");
             }
+            location.reload();
         }
     });
 })

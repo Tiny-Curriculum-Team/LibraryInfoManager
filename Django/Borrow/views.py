@@ -9,15 +9,15 @@ from Book.models import Book
 from Users.models import User
 
 
-# todo list: 1. set books' status when borrowed. And when the books were given back, the status should be reset.
-#            2. disable those books that have been borrowed.
-#            3. show user credit.
-#            4. decrease the credit of those user who were unable to give back books.
-#            5. connect the credit with max_borrow_count and max_borrow_day.
-#            6. credit compute system.
-#            7. complex query.
-#            8. finish the router.
-#            9. Test the whole system.
+# todo list: [√] 1. set books' status when borrowed. And when the books were given back, the status should be reset.
+#            [√] 2. disable those books that have been borrowed.
+#            [ ] 3. show user credit.
+#            [ ] 4. decrease the credit of those user who were unable to give back books.
+#            [ ] 5. connect the credit with max_borrow_count and max_borrow_day.
+#            [ ] 6. credit compute system.
+#            [ ] 7. complex query.
+#            [ ] 8. finish the router.
+#            [ ] 9. Test the whole system.
 
 
 # Create your views here.
@@ -43,7 +43,7 @@ def order_book_view(request):
         books = Book.objects.all().values(
             'ISBN', 'book_name', 'author', 'location', 'status',
             'book_type__book_type_name',
-            'publisher__publisher_name'
+            'publisher__publisher_name',
         )
         return render(request, 'static/OrderBook.html', {'books': books})
 
@@ -71,12 +71,20 @@ def pull_borrow_info(request):
 def update_recording(request):
     if request.method == 'POST':
         update_operate_id = int(request.POST['update_operate_id'])
+        update_status = request.POST['update_status']
+        book_id = request.POST['update_book_ISBN']
+
         update_obj = Borrow.objects.get(OperationID=update_operate_id)
-        update_obj.status = request.POST['update_status']
+        update_obj.status = update_status
         update_obj.save()
 
+        if update_status == '已归还':
+            book_item = Book.objects.get(ISBN=book_id)
+            book_item.status = 'IN'
+            book_item.save()
+
         messages.info(request, "借阅信息更新成功！")
-        return redirect("/brr/")
+        return redirect("/brr/manage/")
 
 
 def remove_recording(request):
@@ -87,10 +95,10 @@ def remove_recording(request):
             item.delete()
         except:
             messages.info(request, "图书删除失败！可能原因是已经删除或者不存在该图书！")
-            return redirect("/brr/")
+            return redirect("/brr/manage/")
         else:
             messages.info(request, "图书删除成功！")
-            return redirect("/brr/")
+            return redirect("/brr/manage/")
 
 
 def add_recordings(request):
@@ -113,6 +121,10 @@ def add_recordings(request):
                     user_id=user_id
                 )
                 borrow_item.save()
+
+                book_item = Book.objects.get(ISBN=book_id)
+                book_item.status = 'OUT'
+                book_item.save()
             return JsonResponse({"success": True})
         else:
             return JsonResponse({
