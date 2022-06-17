@@ -13,7 +13,7 @@ from Users.models import User
 #            [√] 2. disable those books that have been borrowed.
 #            [ ] 3. show user credit and profile.
 #            [ ] 4. decrease the credit of those user who were unable to give back books.
-#            [√] 5. connect the credit with max_borrow_count and max_borrow_day.
+#            [X] 5. connect the credit with max_borrow_count and max_borrow_day.
 #            [ ] 6. credit compute system.
 #            [ ] 7. complex query.
 #            [ ] 8. finish the router.
@@ -110,10 +110,8 @@ def add_recordings(request):
         selected = days_and_items[1:]
 
         number_of_books = len(selected)
-        max_borrow_day_setting = int(User.objects.filter(UserID=user_id).values("max_borrow_day")[0]["max_borrow_day"])
-        max_borrow_count_setting = int(User.objects.filter(UserID=user_id).values("max_borrow_count")[0]["max_borrow_count"])
-        max_borrow_day = int(user_credit / 100 * max_borrow_day_setting)
-        max_borrow_count = int(user_credit / 100 * max_borrow_count_setting)
+        max_borrow_day = int(User.objects.filter(UserID=user_id).values("max_borrow_day")[0]["max_borrow_day"])
+        max_borrow_count = int(User.objects.filter(UserID=user_id).values("max_borrow_count")[0]["max_borrow_count"])
 
         if number_of_books <= max_borrow_count and borrow_days <= max_borrow_day:
             give_back_time = now() + timedelta(days=borrow_days)
