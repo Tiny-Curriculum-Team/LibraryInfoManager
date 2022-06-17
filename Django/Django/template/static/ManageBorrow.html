@@ -6,6 +6,16 @@
     .btn-outline-primary{
         margin-left: 50px;
     }
+    .su-btn {
+        border-color: skyblue;
+        background-color: #D9F2F4;
+        color: #FA9193;
+        font-weight: bolder;
+        font-size: 20px;
+        width: 100px;
+        height: 50px;
+        margin-top: 5px;
+    }
 </style>
 <table class="data_table container table">
     <thead class="thead-dark">
@@ -74,19 +84,19 @@
     </form>
     <form id="update_book_info" action="/brr/post_update_recording/" method="post" style="display: none;">
         {% csrf_token %}
-        <label for="update_operate_id">操作序列号：</label><input id="update_operate_id" type="text" name="update_operate_id" readonly="true"><br>
-        <label for="update_borrow_time">借阅时间：</label><input id="update_borrow_time" type="text" name="update_borrow_time" readonly="true"><br>
-        <label for="update_status">图书状态：</label><select id="update_status" type="text" name="update_status" readonly="true">
+        <label for="update_operate_id">操作序列号：</label><input id="update_operate_id" type="text" name="update_operate_id" readonly="true" class="form-control"><br>
+        <label for="update_borrow_time">借阅时间：</label><input id="update_borrow_time" type="text" name="update_borrow_time" readonly="true" class="form-control"><br>
+        <label for="update_status">图书状态：</label><select id="update_status" type="text" name="update_status" readonly="true" class="form-control">
             <option>在借</option>
             <option>归还</option>
             <option>损坏</option>
             <option>丢失</option>
             <option>迟交</option>
         </select><br>
-        <label for="update_back_time">归还时间：</label><input id="update_back_time" type="text" name="update_back_time" readonly="true"><br>
-        <label for="update_book_ISBN">借阅图书：</label><input id="update_book_ISBN" type="text" name="update_book_ISBN" readonly="true"><br>
-        <label for="update_borrower">借阅人：</label><input id="update_borrower" type="text" name="update_borrower" readonly="true"><br>
-        <input type="submit" value="OK">
+        <label for="update_back_time">归还时间：</label><input id="update_back_time" type="text" name="update_back_time" readonly="true" class="form-control"><br>
+        <label for="update_book_ISBN">借阅图书：</label><input id="update_book_ISBN" type="text" name="update_book_ISBN" readonly="true" class="form-control"><br>
+        <label for="update_borrower">借阅人：</label><input id="update_borrower" type="text" name="update_borrower" readonly="true" class="form-control"><br>
+        <input type="submit" value="OK" class="su-btn">
     </form>
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
 </div>
@@ -115,8 +125,8 @@
     <form action="post_del_recording/" method="post">
         {% csrf_token %}
         <label for="delRecording">要删除的操作序列号：</label>
-        <input id="delRecording" type="text" name="del_recording"><br>
-        <input type="submit" value="OK">
+        <input id="delRecording" type="text" name="del_recording" class="form-control"><br>
+        <input type="submit" value="OK" class="su-btn">
     </form>
 </div>
       </div>
@@ -178,9 +188,9 @@
             <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限" class="form-control">
         </p>
         <p>
-            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" oninput="value=value.replace(/[^\d]/g,'')" class="form-control">
         </p>
-        <input id="submit_post" type="submit" value="查询">
+        <input id="submit_post" type="submit" value="查询" class="su-btn">
     </form>
 </div>
       </div>
