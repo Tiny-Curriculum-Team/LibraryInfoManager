@@ -4,58 +4,100 @@
 {% block title %} 图书管理 {% endblock title %}
 {% block content %}
 <style>
-    .data_table{
-        margin-top:10px;
+    .data_table {
+        margin-top: 10px;
     }
-    .su-btn{
-        border-color:skyblue;
-        background-color:#D9F2F4;
-        color:#FA9193;
-        font-weight:bolder;
-        font-size:20px;
-        width:100px;
-        height:50px;
-        margin-top:5px;
+
+    .su-btn {
+        border-color: skyblue;
+        background-color: #D9F2F4;
+        color: #FA9193;
+        font-weight: bolder;
+        font-size: 20px;
+        width: 100px;
+        height: 50px;
+        margin-top: 5px;
     }
-    .contain{
-        margin-bottom:50px;
+
+    .contain {
+        margin-bottom: 50px;
     }
-    .co{
-        margin-top:40px;
+
+    .co {
+        margin-top: 40px;
     }
-    .btn{
-        margin-left:60px;
+
+    .btn {
+        margin-left: 60px;
         margin-bottom: 10px;
     }
 </style>
 <div class="contain">
-   <div class="container co">
+    <div class="container co">
         <a type="button" class="btn btn-info" onclick="
             $('#add_book').css('display', 'block');
             $('#remove_book').css('display', 'none');
             $('#update_book').css('display', 'none');
+            $('#query_book').css('display','none');
         ">添加</a>
         <a type="button" class="btn btn-primary" onclick="
             $('#remove_book').css('display', 'block');
             $('#add_book').css('display', 'none');
             $('#update_book').css('display', 'none');
+            $('#query_book').css('display','none');
         ">删除</a>
         <a type="button" class="btn btn-secondary" onclick="
             $('#update_book').css('display', 'block');
             $('#remove_book').css('display', 'none');
             $('#add_book').css('display', 'none');
+            $('#query_book').css('display','none');
             $('#update_book_info').css('display', 'none');
         ">修改</a>
-
+        <a type="button" class="btn btn-secondary" onclick="
+            $('#update_book').css('display', 'none');
+            $('#remove_book').css('display', 'none');
+            $('#add_book').css('display', 'none');
+            $('#query_book').css('display','block');
+        ">查找</a>
+        <div id="query_book" style="display: none;">
+            <form id="query_db" action="" method="post" onsubmit="return save();">
+                {% csrf_token %}
+                <p>
+                    <label for="ISBN_book">ISBN：</label><input id="ISBN_book" type="text" name="ISBN_book"
+                                                               placeholder="指定图书的ISBN,默认不限">
+                </p>
+                <p>
+                    <label for="bkn"></label>图书名称：<input id="bkn" type="text" name="bkn" placeholder="指定图书名称,默认不限">
+                </p>
+                <p>
+                    <label for="writer_name">作者：</label><input id="writer_name" type="text" name="writer_name"
+                                                               placeholder="指定作者,默认不限">
+                </p>
+                <p>
+                    <label for="book_type">图书种类：</label><input id="book_type" type="text" name="book_type"
+                                                               placeholder="指定图书种类,默认不限">
+                </p>
+                <p>
+                    <label for="press"></label>出版社：<input id="press" type="text" name="press" placeholder="指定出版社,默认不限">
+                </p>
+                <input id="submit_post" type="submit" value="查询">
+            </form>
+        </div>
         <div id="add_book" style="display: none;">
             <form action="post_addbook/" method="post" class="form-group">
                 {% csrf_token %}
                 <label for="ISBN">ISBN：</label><input id="ISBN" type="text" name="add_ISBN" class="form-control"><br>
-                <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name" class="form-control"><br>
-                <label for="author">作者：</label><input id="author" type="text" name="add_author" class="form-control"><br>
-                <label for="location">图书位置：</label><input id="location" type="text" name="add_location" class="form-control"><br>
-                <label for="book_type_list">图书类别：</label><select id="book_type_list" class="form-control form-control-lg" name="add_book_type"></select><br>
-                <label for="publisher_list">出版社：</label><select id="publisher_list" class="form-control form-control-lg" name="add_publisher"></select>
+                <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name"
+                                                         class="form-control"><br>
+                <label for="author">作者：</label><input id="author" type="text" name="add_author"
+                                                      class="form-control"><br>
+                <label for="location">图书位置：</label><input id="location" type="text" name="add_location"
+                                                          class="form-control"><br>
+                <label for="book_type_list">图书类别：</label><select id="book_type_list"
+                                                                 class="form-control form-control-lg"
+                                                                 name="add_book_type"></select><br>
+                <label for="publisher_list">出版社：</label><select id="publisher_list" class="form-control form-control-lg"
+                                                                name="add_publisher"></select>
                 <input type="submit" value="OK" class="su-btn">
             </form>
         </div>
@@ -76,14 +118,23 @@
                 <input id="submit_pull" type="submit" value="查询" class="su-btn"><br>
                 <span id="querry_error" style="display: none;">该图书不存在！</span>
             </form>
-            <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;"  class="form-group">
+            <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;"
+                  class="form-group">
                 {% csrf_token %}
-                <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" class="form-control"><br>
-                <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" class="form-control"><br>
-                <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author" class="form-control"><br>
-                <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location" class="form-control"><br>
-                <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type" class="form-control form-control-lg"><br>
-                <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher" class="form-control form-control-lg">
+                <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN"
+                                                             class="form-control"><br>
+                <label for="update_book_name">书名：</label><input id="update_book_name" type="text"
+                                                                name="update_book_name" class="form-control"><br>
+                <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author"
+                                                             class="form-control"><br>
+                <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location"
+                                                                 class="form-control"><br>
+                <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text"
+                                                                  name="update_book_type"
+                                                                  class="form-control form-control-lg"><br>
+                <label for="update_publisher">出版社：</label><input id="update_publisher" type="text"
+                                                                 name="update_publisher"
+                                                                 class="form-control form-control-lg">
                 <input type="submit" value="OK" class="su-btn">
             </form>
             <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
@@ -92,26 +143,26 @@
     <div class="book-roll panel-footer" style="height:600px;overflow: auto;margin-top:30px;">
         <table class="data_table table" id="userTable">
             <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ISBN</th>
-                    <th scope="col">图书名称</th>
-                    <th scope="col">作者</th>
-                    <th scope="col">位置</th>
-                    <th scope="col">图书种类</th>
-                    <th scope="col">出版社</th>
-                </tr>
+            <tr>
+                <th scope="col">ISBN</th>
+                <th scope="col">图书名称</th>
+                <th scope="col">作者</th>
+                <th scope="col">位置</th>
+                <th scope="col">图书种类</th>
+                <th scope="col">出版社</th>
+            </tr>
             </thead>
             <tbody>
-                {% for item in books %}
-                <tr>
-                    <td>{{ item.ISBN }}</td>
-                    <td>{{ item.book_name }}</td>
-                    <td>{{ item.author }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.book_type__book_type_name }}</td>
-                    <td>{{ item.publisher__publisher_name }}</td>
-                </tr>
-                {% endfor %}
+            {% for item in books %}
+            <tr>
+                <td>{{ item.ISBN }}</td>
+                <td>{{ item.book_name }}</td>
+                <td>{{ item.author }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.book_type__book_type_name }}</td>
+                <td>{{ item.publisher__publisher_name }}</td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -119,76 +170,76 @@
 {% endblock content %}
 {% block JsScript %}
 <script>
-const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-$("#submit_pull").on("click", function () {
-    let pull_ISBN = $('#pull_ISBN').val()
-    const post_data = {
-        "pull_ISBN": pull_ISBN,
-    };
-    $.ajax({
-        headers: {
-            'X-CSRFToken': csrf_token
-        },
-        url: '/bm/get_book_info',
-        type: "GET",
-        data: post_data,
-        success: (data_json) => {
-            if ($.isEmptyObject(data_json)){
-                $("#update_ISBN").attr("value", "");
-                $("#update_book_name").attr("value", "");
-                $("#update_author").attr("value", "");
-                $("#update_location").attr("value", "");
-                $("#update_book_type").attr("value", "");
-                $("#update_publisher").attr("value", "");
-                $("#querry_error").css("display", "block");
-                $("#update_book_info").css("display", "none");
-            } else {
-                $("#update_ISBN").attr("value", data_json['ISBN']);
-                $("#update_book_name").attr("value", data_json['book_name']);
-                $("#update_author").attr("value", data_json['author']);
-                $("#update_location").attr("value", data_json['location']);
-                $("#update_book_type").attr("value", data_json['book_type']);
-                $("#update_publisher").attr("value", data_json['publisher']);
-                $("#querry_error").css("display", "none");
-                $("#update_book_info").css("display", "block");
-            }
-        },
-    });
-})
+    $("#submit_pull").on("click", function () {
+        let pull_ISBN = $('#pull_ISBN').val()
+        const post_data = {
+            "pull_ISBN": pull_ISBN,
+        };
+        $.ajax({
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            url: '/bm/get_book_info',
+            type: "GET",
+            data: post_data,
+            success: (data_json) => {
+                if ($.isEmptyObject(data_json)) {
+                    $("#update_ISBN").attr("value", "");
+                    $("#update_book_name").attr("value", "");
+                    $("#update_author").attr("value", "");
+                    $("#update_location").attr("value", "");
+                    $("#update_book_type").attr("value", "");
+                    $("#update_publisher").attr("value", "");
+                    $("#querry_error").css("display", "block");
+                    $("#update_book_info").css("display", "none");
+                } else {
+                    $("#update_ISBN").attr("value", data_json['ISBN']);
+                    $("#update_book_name").attr("value", data_json['book_name']);
+                    $("#update_author").attr("value", data_json['author']);
+                    $("#update_location").attr("value", data_json['location']);
+                    $("#update_book_type").attr("value", data_json['book_type']);
+                    $("#update_publisher").attr("value", data_json['publisher']);
+                    $("#querry_error").css("display", "none");
+                    $("#update_book_info").css("display", "block");
+                }
+            },
+        });
+    })
 
-$(function (){
-    $.ajax({
-        headers: {
-            'X-CSRFToken': csrf_token
-        },
-        url: '/bm/get_book_type_list',
-        type: "GET",
-        success: (data_json) => {
-            let item_option;
-            for (let key in data_json) {
-                item_option = document.createElement("option");
-                item_option.innerText = data_json[key];
-                $("#book_type_list").append(item_option);
-            }
-        },
-    });
+    $(function () {
+        $.ajax({
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            url: '/bm/get_book_type_list',
+            type: "GET",
+            success: (data_json) => {
+                let item_option;
+                for (let key in data_json) {
+                    item_option = document.createElement("option");
+                    item_option.innerText = data_json[key];
+                    $("#book_type_list").append(item_option);
+                }
+            },
+        });
 
         $.ajax({
-        headers: {
-            'X-CSRFToken': csrf_token
-        },
-        url: '/bm/get_publisher_list',
-        type: "GET",
-        success: (data_json) => {
-            let item_option;
-            for (let key in data_json) {
-                item_option = document.createElement("option");
-                item_option.innerText = data_json[key];
-                $("#publisher_list").append(item_option);
-            }
-        },
-    });
-})
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            url: '/bm/get_publisher_list',
+            type: "GET",
+            success: (data_json) => {
+                let item_option;
+                for (let key in data_json) {
+                    item_option = document.createElement("option");
+                    item_option.innerText = data_json[key];
+                    $("#publisher_list").append(item_option);
+                }
+            },
+        });
+    })
 </script>
 {% endblock JsScript %}
