@@ -4,8 +4,11 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from datetime import timedelta
 import json
+from django.conf import settings
 from .models import Borrow
 from Book.models import Book
 from Users.models import User
@@ -13,7 +16,7 @@ from Users.models import User
 
 # todo list: [√] 1. set books' status when borrowed. And when the books were given back, the status should be reset.
 #            [√] 2. disable those books that have been borrowed.
-#            [ ] 3. show user credit and profile.
+#            [√] 3. show user credit and profile.
 #            [ ] 4. decrease the credit of those user who were unable to give back books.
 #            [X] 5. connect the credit with max_borrow_count and max_borrow_day.
 #            [ ] 6. credit compute system.
@@ -96,10 +99,7 @@ def update_recording(request):
         update_obj = Borrow.objects.get(OperationID=update_operate_id)
         update_obj.status = update_status
         update_obj.save()
-        if update_status == '已归还':
-            book_item = Book.objects.get(ISBN=book_id)
-            book_item.status = 'IN'
-            book_item.save()
+
         messages.info(request, "借阅信息更新成功！")
         return redirect("/brr/manage/")
 
@@ -122,7 +122,6 @@ def add_recordings(request):
     if request.method == "POST":
         days_and_items = list(json.loads(json.dumps(request.POST)).values())
         user_id = int(request.user.UserID)
-        user_credit = int(request.user.trustworthiness)
         borrow_days = int(days_and_items[0])
         selected = days_and_items[1:]
 
@@ -139,10 +138,6 @@ def add_recordings(request):
                     user_id=user_id
                 )
                 borrow_item.save()
-
-                book_item = Book.objects.get(ISBN=book_id)
-                book_item.status = 'OUT'
-                book_item.save()
             return JsonResponse({"success": True})
         else:
             return JsonResponse({
@@ -151,3 +146,34 @@ def add_recordings(request):
                 "max_borrow_count": max_borrow_count
             })
     return redirect("/brr/order/")
+
+
+
+@receiver(post_save, sender=Borrow)
+def trigger_update_book_status(sender, instance, **kwargs):
+    book_item = Book.objects.get(ISBN=instance.book_id)
+    if instance.status == '归还' or instance.status == '损坏':
+        book_item.status = 'IN'
+    else:
+        book_item.status = 'OUT'
+    book_item.save()
+
+    user_id = instance.user_id
+    user = User.objects.get(UserID=user_id)
+    if instance.status == '归还' and user.trustworthiness < 100:
+        user.trustworthiness += 1
+    elif instance.status == '损坏' and user.trustworthiness > 0:
+        user.trustworthiness -= 25
+    elif instance.status == '丢失' and user.trustworthiness > 0:
+        user.trustworthiness -= 50
+    elif instance.status == '迟交' and user.trustworthiness > 0:
+        user.trustworthiness -= 10
+    user.trustworthiness = max(0, user.trustworthiness)
+
+    user.max_borrow_day = int(user.trustworthiness / 100 * settings.MAX_BORROW_DAY)
+    user.max_borrow_count = int(user.trustworthiness / 100 * settings.MAX_BORROW_COUNT)
+    user.save()
+
+
+def query_recording(request):
+    pass
