@@ -18,8 +18,14 @@
         {% endfor %}
     </tbody>
 </table>
-<a type="button" onclick="$('#add_publisher').css('display', 'block');$('#remove_publisher').css('display', 'none');">添加出版社</a>
-<a type="button" onclick="$('#remove_publisher').css('display', 'block');$('#add_publisher').css('display', 'none');">删除出版社</a>
+<a type="button" onclick="
+    $('#add_publisher').css('display', 'block');
+    $('#remove_publisher').css('display', 'none');
+">添加出版社</a>
+<a type="button" onclick="
+    $('#remove_publisher').css('display', 'block');
+    $('#add_publisher').css('display', 'none');
+">删除出版社</a>
 <div id="add_publisher" style="display: none;">
     <span>请按照“[出版社名称]”格式填写，各种类之间用;隔开，「示例」：人民邮电;机械工业</span><br>
     <form action="post_addpublisher/" method="post">

@@ -194,7 +194,7 @@ $$
 
 To use it, you shall run InitDBToolkit first. 
 
-The next step is to Initial the database, run `sh Initialize.sh`.
+The next step is to Initial the database, run `sh Initialize.sh` in Linux System or double click `Initialize.bat` in Windows System.
 
 Then run `python Django/manage.py runserver`.
 

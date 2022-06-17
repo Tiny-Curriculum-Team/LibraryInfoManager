@@ -42,7 +42,7 @@ def publisher_view(request):
         return redirect("/sign/in/")
     elif current_user.is_admin:
         publishers = Publisher.objects.all()
-        return render(request, 'static/ManagePublisher.html', {'publishers': publishers})
+        return render(request, 'static/ManagePublisher.html', {'publishers': publishers, 'isAdmin': current_user.is_admin})
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/sign/in/")
