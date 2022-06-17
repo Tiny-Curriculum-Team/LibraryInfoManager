@@ -47,19 +47,19 @@
 {% endif %}
 
 {% if isAdmin %}
-<a type="button" class="btn btn-outline-primary" onclick="
-    $('#update_recording').css('display', 'block');
-    $('#remove_recording').css('display', 'none');
-    $('#query_recording').css('display','none');
-">修改记录</a>
+<!--<a type="button" class="btn btn-outline-primary" onclick="-->
+<!--    $('#update_recording').css('display', 'block');-->
+<!--    $('#remove_recording').css('display', 'none');-->
+<!--    $('#query_recording').css('display','none');-->
+<!--">修改记录</a>-->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  修改
+  修改记录
 </button>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">修改记录</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -93,12 +93,24 @@
     </div>
   </div>
 </div>
-<a type="button" class="btn btn-outline-primary" onclick="
-    $('#remove_recording').css('display', 'block');
-    $('#update_recording').css('display', 'none');
-">删除记录</a>
-
-<div id="remove_recording" style="display: none;">
+<!--<a type="button" class="btn btn-outline-primary" onclick="-->
+<!--    $('#remove_recording').css('display', 'block');-->
+<!--    $('#update_recording').css('display', 'none');-->
+<!--">删除记录</a>-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">
+  删除记录
+</button>
+<div class="modal fade" id="delete" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLab">删除记录</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="remove_recording">
     <form action="post_del_recording/" method="post">
         {% csrf_token %}
         <label for="delRecording">要删除的操作序列号：</label>
@@ -106,6 +118,19 @@
         <input type="submit" value="OK">
     </form>
 </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div id="remove_recording" style="display: none;">-->
+<!--    <form action="post_del_recording/" method="post">-->
+<!--        {% csrf_token %}-->
+<!--        <label for="delRecording">要删除的操作序列号：</label>-->
+<!--        <input id="delRecording" type="text" name="del_recording"><br>-->
+<!--        <input type="submit" value="OK">-->
+<!--    </form>-->
+<!--</div>-->
 
 
 {% else %}
@@ -114,20 +139,32 @@
 
 {% endif %}
 
-<a type="button" onclick="
-    $('#query_recording').css('display','block');
-    $('#update_recording').css('display', 'none');
-    $('#remove_recording').css('display', 'none');
-">查询记录</a>
-
-<div id="query_recording" style="display: none;">
+<!--<a type="button" onclick="-->
+<!--    $('#query_recording').css('display','block');-->
+<!--    $('#update_recording').css('display', 'none');-->
+<!--    $('#remove_recording').css('display', 'none');-->
+<!--">查询记录</a>-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#search">
+  查询记录
+</button>
+<div class="modal fade" id="search" tabindex="-1" aria-labelledby="exampleMo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleMo">查询记录</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="query_recording">
     <form id="query_db" action="" method="post" onsubmit="return save();">
         {% csrf_token %}
         <p>
-            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限" class="form-control">
         </p>
         <p>
-            <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">
+            <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true" class="form-control">
                 <option>不限</option>
                 <option>在借</option>
                 <option>归还</option>
@@ -137,14 +174,43 @@
             </select>
         </p>
         <p>
-            <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
+            <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限" class="form-control">
         </p>
         <p>
-            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" class="form-control">
         </p>
         <input id="submit_post" type="submit" value="查询">
     </form>
 </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--<div id="query_recording" style="display: none;">-->
+<!--    <form id="query_db" action="" method="post" onsubmit="return save();">-->
+<!--        {% csrf_token %}-->
+<!--        <p>-->
+<!--            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">-->
+<!--                <option>不限</option>-->
+<!--                <option>在借</option>-->
+<!--                <option>归还</option>-->
+<!--                <option>丢失</option>-->
+<!--                <option>损坏</option>-->
+<!--                <option>迟交</option>-->
+<!--            </select>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">-->
+<!--        </p>-->
+<!--        <input id="submit_post" type="submit" value="查询">-->
+<!--    </form>-->
+<!--</div>-->
 
 {% endblock content %}
 {% block JsScript %}

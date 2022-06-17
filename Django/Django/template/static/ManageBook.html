@@ -53,34 +53,34 @@
             $('#query_book').css('display','none');
             $('#update_book_info').css('display', 'none');
         ">修改</a>
-        <a type="button" class="btn btn-secondary" onclick="
+        <a type="button" class="btn btn-success" onclick="
             $('#update_book').css('display', 'none');
             $('#remove_book').css('display', 'none');
             $('#add_book').css('display', 'none');
             $('#query_book').css('display','block');
         ">查找</a>
         <div id="query_book" style="display: none;">
-            <form id="query_db" action="" method="post" onsubmit="return save();">
+            <form id="query_db" action="" method="post" onsubmit="return save();" class="form-group">
                 {% csrf_token %}
                 <p>
                     <label for="ISBN_book">ISBN：</label><input id="ISBN_book" type="text" name="ISBN_book"
-                                                               placeholder="指定图书的ISBN,默认不限">
+                                                               placeholder="指定图书的ISBN,默认不限" class="form-control">
                 </p>
                 <p>
-                    <label for="bkn"></label>图书名称：<input id="bkn" type="text" name="bkn" placeholder="指定图书名称,默认不限">
+                    <label for="bkn"></label>图书名称：<input id="bkn" type="text" name="bkn" placeholder="指定图书名称,默认不限" class="form-control">
                 </p>
                 <p>
                     <label for="writer_name">作者：</label><input id="writer_name" type="text" name="writer_name"
-                                                               placeholder="指定作者,默认不限">
+                                                               placeholder="指定作者,默认不限" class="form-control">
                 </p>
                 <p>
                     <label for="book_type">图书种类：</label><input id="book_type" type="text" name="book_type"
-                                                               placeholder="指定图书种类,默认不限">
+                                                               placeholder="指定图书种类,默认不限" class="form-control">
                 </p>
                 <p>
-                    <label for="press"></label>出版社：<input id="press" type="text" name="press" placeholder="指定出版社,默认不限">
+                    <label for="press"></label>出版社：<input id="press" type="text" name="press" placeholder="指定出版社,默认不限" class="form-control">
                 </p>
-                <input id="submit_post" type="submit" value="查询">
+                <input id="submit_post" type="submit" value="查询" class="su-btn">
             </form>
         </div>
         <div id="add_book" style="display: none;">
