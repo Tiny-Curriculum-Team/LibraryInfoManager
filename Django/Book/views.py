@@ -98,7 +98,7 @@ def book_view(request):
             'book_type__book_type_name',
             'publisher__publisher_name'
         )
-        return render(request, 'static/ManageBook.html', {'books': books})
+        return render(request, 'static/ManageBook.html', {'books': books, 'isAdmin': current_user.is_admin})
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/user/sign_in/")

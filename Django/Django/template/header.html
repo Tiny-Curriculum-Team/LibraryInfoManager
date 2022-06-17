@@ -11,10 +11,18 @@
             Dropdown
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="{% url 'users:userProfile' %}">用户信息</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            {% if not isAdmin %}
+            <a class="dropdown-item" href="{% url 'borrow:orderPage' %}">借阅图书</a>
+            <a class="dropdown-item" href="{% url 'borrow:managePage' %}">借阅记录</a>
+            {% else %}
+            <a class="dropdown-item" href="{% url 'users:userManage' %}">用户管理</a>
+            <a class="dropdown-item" href="{% url 'publishers:mp' %}">出版社管理</a>
+            <a class="dropdown-item" href="{% url 'book_types:mbt' %}">图书种类管理</a>
+            <a class="dropdown-item" href="{% url 'books:mb' %}">图书管理</a>
+            <a class="dropdown-item" href="{% url 'borrow:managePage' %}">借阅记录管理</a>
+            {% endif %}
           </div>
         </li>
       </ul>

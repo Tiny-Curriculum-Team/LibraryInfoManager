@@ -93,19 +93,15 @@ $('#quert_user').css('display','none');
             <label for="user_id">账号ID：</label><input id="user_id" type="text" name="user_id" placeholder="指定账号ID,默认不限">
         </p>
         <p>
-
             <label for="user_name">用户名：</label><input id="user_name" type="text" name="user_name" placeholder="指定用户名,默认不限">
         </p>
         <p>
-
             <label for="name">姓名：</label><input id="name" type="text" name="name" placeholder="指定姓名,默认不限">
         </p>
         <p>
-
             <label for="phone">电话：</label><input id="phone" type="text" name="phone" placeholder="指定电话,默认不限">
         </p>
         <p>
-
             <label for="time">近日登录时间：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
         </p>
         <p>
@@ -206,45 +202,4 @@ $('#quert_user').css('display','none');
         });
     });
 </script>
-<!--<script>-->
-<!--const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;-->
-<!--$("#submit_post").on("click",function(){-->
-<!--    let user_id = $('#user_id').val()-->
-<!--    let user_name = $("#user_name").val()-->
-<!--    let name = $("#name").val()-->
-<!--    let phone = $("#phone").val()-->
-<!--    let time = $("#time").val()-->
-<!--    let min_point = $("#min_point").val()-->
-<!--    let max_point = $("#max_point").val()-->
-<!--    if (min_point>100 || min_point<0){-->
-<!--        alert("信用点范围错误")-->
-<!--        return;-->
-<!--    }-->
-<!--    if(min_point>max_point ){-->
-<!--        alert("信用点范围错误")-->
-<!--        return;-->
-<!--    }-->
-<!--    if (max_point>100||max_point<0){-->
-<!--        alert("信用点范围错误")-->
-<!--        return;-->
-<!--    }-->
-<!--    const post_select = {-->
-<!--        "user_id":user_id,-->
-<!--        "user_name":user_name,-->
-<!--        "name":name,-->
-<!--        "time":time,-->
-<!--        "phone":phone,-->
-<!--        "min_point":min_point,-->
-<!--        "max_point":max_point-->
-<!--    };-->
-<!--    $.ajax({-->
-<!--        headers:{-->
-<!--            'X-CSRFToken':csrftoken-->
-<!--        },-->
-<!--        url:'/user/manage/',-->
-<!--        type:"POST",-->
-<!--        data:post_select,-->
-<!--    })-->
-<!--})-->
-<!--</script>-->
 {% endblock JsScript %}

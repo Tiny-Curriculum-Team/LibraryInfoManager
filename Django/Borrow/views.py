@@ -67,7 +67,7 @@ def order_book_view(request):
             'book_type__book_type_name',
             'publisher__publisher_name',
         )
-        return render(request, 'static/OrderBook.html', {'books': books})
+        return render(request, 'static/OrderBook.html', {'books': books, 'isAdmin': current_user.is_admin})
 
 
 def pull_borrow_info(request):

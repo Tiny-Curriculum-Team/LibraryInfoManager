@@ -110,7 +110,7 @@ def user_manage(request):
         'is_active', 'last_login', 'trustworthiness',
         'max_borrow_day', 'max_borrow_count')
     print(condition_u, "\n$$$$$$$$$$$$$$$$$conditions$$$$$$$$$$$$$$$$$$\n", condition_d)
-    return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users})
+    return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users, 'isAdmin': current_user.is_admin})
 
 
 def remove_user(request):
@@ -185,7 +185,7 @@ def user_profile_view(request):
             'last_login', 'trustworthiness',
             'max_borrow_day', 'max_borrow_count',
         )
-        return render(request, 'static/UserProfile.html', {'User': user[0]})
+        return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/user/sign_in/")

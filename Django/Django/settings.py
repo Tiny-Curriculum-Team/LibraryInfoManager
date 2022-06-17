@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'BookType',
     'Book',
     'Borrow',
-    'Manage',
     'MainPanel',
 ]
 
