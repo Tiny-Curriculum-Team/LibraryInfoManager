@@ -151,7 +151,3 @@ def add_recordings(request):
                 "max_borrow_count": max_borrow_count
             })
     return redirect("/brr/order/")
-
-
-def query_recording(request):
-    pass
