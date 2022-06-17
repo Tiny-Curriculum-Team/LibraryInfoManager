@@ -45,11 +45,13 @@
 <a type="button" onclick="
     $('#update_recording').css('display', 'block');
     $('#remove_recording').css('display', 'none');
+    $('#query_recording').css('display','none');
 ">修改记录</a>
 
 <a type="button" onclick="
     $('#remove_recording').css('display', 'block');
     $('#update_recording').css('display', 'none');
+    $('#query_recording').css('display','none');
 ">删除记录</a>
 
 <div id="update_recording" style="display: none;">
@@ -84,10 +86,44 @@
     </form>
 </div>
 
+
 {% else %}
 <a type="button">添加记录</a>
 {% endif %}
-<a type="button">查询记录</a>
+<a type="button" onclick="
+    $('#query_recording').css('display','block');
+    $('#update_recording').css('display', 'none');
+    $('#remove_recording').css('display', 'none');
+">查询记录</a>
+
+<div id="query_recording" style="display: none;">
+    <form id="query_db" action=" " method="post" onsubmit="return save();">
+        {% csrf_token %}
+        <p>
+            近日借阅:
+            <label for="time">近日借阅</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
+        </p>
+        <p>
+            图书状态:
+            <label for="state">图书状态</label><select id="state" type="text" name="state" readonly="true">
+                <option>不限</option>
+                <option>损坏</option>
+                <option>丢失</option>
+                <option>归还</option>
+                <option>在借</option>
+            </select>
+        </p>
+        <p>
+            借阅图书:
+            <label for="book">借阅图书</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限">
+        </p>
+        <p>
+            借阅人：
+            <label for="person">借阅人</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限">
+        </p>
+        <input id="submit_post" type="submit" value="查询">
+    </form>
+</div>
 
 {% endblock content %}
 {% block JsScript %}
@@ -128,6 +164,30 @@ $("#submit_pull").on("click", function () {
             }
         },
     });
+})
+</script>
+
+<script>
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+$("#submit_post").on("click",function(){
+    let time = $('#time').val()
+    let state = $("#state").val()
+    let book = $("#book").val()
+    let person = $("#person").val()
+    const post_select = {
+        "time":time,
+        "state":state,
+        "book":book,
+        "person":person
+    };
+    $.ajax({
+        headers:{
+            'X-CSRFToken':csrftoken
+        },
+        url:'',
+        type:"POST",
+        data:post_select,
+    })
 })
 </script>
 {% endblock JsScript %}

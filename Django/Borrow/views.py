@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -7,14 +9,31 @@ from .models import Borrow
 # Create your views here.
 def show_recordings(request):
     current_user = request.user
+    conditions = dict()
     if current_user.is_anonymous:
         messages.info(request, "由于您还未登录，故访问被拒绝！")
         return redirect("/user/sign_in/")
-    elif current_user.is_admin:
-        borrows = Borrow.objects.all().values()
-    else:
+    elif not current_user.is_admin:
         user_id = int(request.session.get('_auth_user_id'))
-        borrows = Borrow.objects.filter(user_id=user_id).values()
+        conditions['userID'] = user_id
+    try:
+        time = request.POST['time']
+        state = request.POST['state']
+        book = request.POST['book']
+        person = request.POST['person']
+        if time:
+            now = datetime.datetime.now()
+            end = now - datetime.timedelta(days=int(time))
+            conditions['borrow_time__range'] = (end, now)
+        if state != '不限':
+            conditions['status'] = state
+        if book:
+            conditions['book_id'] = book
+        if person:
+            conditions['user_id'] = person
+    except Exception as e:
+        print(e)
+    borrows = Borrow.objects.filter(**conditions).values()
     return render(request, 'static/ManageBorrow.html', {'borrows': borrows, 'isAdmin': current_user.is_admin})
 
 
@@ -42,7 +61,6 @@ def update_recording(request):
         update_obj = Borrow.objects.get(OperationID=update_operate_id)
         update_obj.status = request.POST['update_status']
         update_obj.save()
-
         messages.info(request, "借阅信息更新成功！")
         return redirect("/brr/")
 
@@ -63,8 +81,4 @@ def remove_recording(request):
 
 
 def add_recordings(request):
-    pass
-
-
-def query_recording(request):
     pass
