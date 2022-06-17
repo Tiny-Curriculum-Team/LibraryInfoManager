@@ -101,7 +101,7 @@
 ">查询记录</a>
 
 <div id="query_recording" style="display: none;">
-    <form id="query_db" action=" " method="post" onsubmit="return save();">
+    <form id="query_db" action="" method="post" onsubmit="return save();">
         {% csrf_token %}
         <p>
             <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限">
@@ -109,10 +109,11 @@
         <p>
             <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true">
                 <option>不限</option>
-                <option>损坏</option>
-                <option>丢失</option>
-                <option>归还</option>
                 <option>在借</option>
+                <option>归还</option>
+                <option>丢失</option>
+                <option>损坏</option>
+                <option>迟交</option>
             </select>
         </p>
         <p>
@@ -164,30 +165,6 @@ $("#submit_pull").on("click", function () {
             }
         },
     });
-})
-</script>
-
-<script>
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-$("#submit_post").on("click",function(){
-    let time = $('#time').val()
-    let state = $("#state").val()
-    let book = $("#book").val()
-    let person = $("#person").val()
-    const post_select = {
-        "time":time,
-        "state":state,
-        "book":book,
-        "person":person
-    };
-    $.ajax({
-        headers:{
-            'X-CSRFToken':csrftoken
-        },
-        url:'/brr/manage/',
-        type:"POST",
-        data:post_select,
-    })
 })
 </script>
 {% endblock JsScript %}

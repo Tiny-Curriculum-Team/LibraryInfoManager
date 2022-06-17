@@ -148,6 +148,7 @@ def add_recordings(request):
     return redirect("/brr/order/")
 
 
+
 @receiver(post_save, sender=Borrow)
 def trigger_update_book_status(sender, instance, **kwargs):
     book_item = Book.objects.get(ISBN=instance.book_id)
