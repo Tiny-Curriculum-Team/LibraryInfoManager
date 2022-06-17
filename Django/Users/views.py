@@ -135,5 +135,50 @@ def update_user(request):
     return redirect("/user/manage/")
 
 
+def user_profile_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "您还未登录，请先登录！")
+        return redirect("/user/sign_in/")
+    elif current_user.is_admin:
+        user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel',
+            'last_login', 'trustworthiness',
+            'max_borrow_day', 'max_borrow_count',
+        )
+        return render(request, 'static/UserProfile.html', {'User': user[0]})
+    else:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+
+
+def update_user_profile(request):
+    if request.method == "POST":
+        user_id = int(request.user.UserID)
+        user = User.objects.get(UserID=user_id)
+        update_data = request.POST
+        user.nickname = update_data['nickname']
+        user.name = update_data['name']
+        user.tel = update_data['tele']
+        user.save()
+    return JsonResponse({"success": True})
+
+
+def update_user_password(request):
+    if request.method == "POST":
+        user_id = int(request.user.UserID)
+        old_password = request.POST['old_password']
+        new_password = request.POST['new_password']
+        user = authenticate(username=user_id, password=old_password)
+        if user is not None:
+            user = User.objects.get(UserID=user_id)
+            user.set_password(new_password)
+            user.save()
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"success": False})
+
+
+
 def query_user(request):
     pass

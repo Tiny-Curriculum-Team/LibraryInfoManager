@@ -21,7 +21,7 @@
         margin-bottom:50px;
     }
     .co{
-        margin-top:20px;
+        margin-top:40px;
     }
     .btn{
         margin-left:60px;
@@ -31,90 +31,90 @@
 <div class="contain">
    <div class="container co">
         <a type="button" class="btn btn-info" onclick="
-    $('#add_book').css('display', 'block');
-    $('#remove_book').css('display', 'none');
-    $('#update_book').css('display', 'none');
-">添加</a>
-<a type="button" class="btn btn-primary" onclick="
-    $('#remove_book').css('display', 'block');
-    $('#add_book').css('display', 'none');
-    $('#update_book').css('display', 'none');
-">删除</a>
-<a type="button" class="btn btn-secondary" onclick="
-    $('#update_book').css('display', 'block');
-    $('#remove_book').css('display', 'none');
-    $('#add_book').css('display', 'none');
-    $('#update_book_info').css('display', 'none');
-">修改</a>
+            $('#add_book').css('display', 'block');
+            $('#remove_book').css('display', 'none');
+            $('#update_book').css('display', 'none');
+        ">添加</a>
+        <a type="button" class="btn btn-primary" onclick="
+            $('#remove_book').css('display', 'block');
+            $('#add_book').css('display', 'none');
+            $('#update_book').css('display', 'none');
+        ">删除</a>
+        <a type="button" class="btn btn-secondary" onclick="
+            $('#update_book').css('display', 'block');
+            $('#remove_book').css('display', 'none');
+            $('#add_book').css('display', 'none');
+            $('#update_book_info').css('display', 'none');
+        ">修改</a>
 
-<div id="add_book" style="display: none;">
-    <form action="post_addbook/" method="post" class="form-group">
-        {% csrf_token %}
-        <label for="ISBN">ISBN：</label><input id="ISBN" type="text" name="add_ISBN" class="form-control"><br>
-        <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name" class="form-control"><br>
-        <label for="author">作者：</label><input id="author" type="text" name="add_author" class="form-control"><br>
-        <label for="location">图书位置：</label><input id="location" type="text" name="add_location" class="form-control"><br>
-<!--        <label for="book_type">图书类别：</label><input id="book_type" type="text" name="add_book_type"><br>-->
-<!--        <label for="publisher">出版社：</label><input id="publisher" type="text" name="add_publisher"><br>-->
-        <label for="book_type_list">图书类别：</label><select id="book_type_list" class="form-control form-control-lg" name="add_book_type"></select><br>
-        <label for="publisher_list">图书类别：</label><select id="publisher_list" class="form-control form-control-lg" name="add_publisher"></select>
-        <input type="submit" value="OK" class="su-btn">
-    </form>
-</div>
+        <div id="add_book" style="display: none;">
+            <form action="post_addbook/" method="post" class="form-group">
+                {% csrf_token %}
+                <label for="ISBN">ISBN：</label><input id="ISBN" type="text" name="add_ISBN" class="form-control"><br>
+                <label for="book_name">书名：</label><input id="book_name" type="text" name="add_book_name" class="form-control"><br>
+                <label for="author">作者：</label><input id="author" type="text" name="add_author" class="form-control"><br>
+                <label for="location">图书位置：</label><input id="location" type="text" name="add_location" class="form-control"><br>
+                <label for="book_type_list">图书类别：</label><select id="book_type_list" class="form-control form-control-lg" name="add_book_type"></select><br>
+                <label for="publisher_list">出版社：</label><select id="publisher_list" class="form-control form-control-lg" name="add_publisher"></select>
+                <input type="submit" value="OK" class="su-btn">
+            </form>
+        </div>
 
-<div id="remove_book" style="display: none;">
-    <form action="post_delbook/" method="post" class="form-group">
-        {% csrf_token %}
-        <label for="delISBN">ISBN：</label>
-        <input id="delISBN" type="text" name="del_ISBN" class="form-control">
-        <input type="submit" value="OK" class="su-btn">
-    </form>
-</div>
+        <div id="remove_book" style="display: none;">
+            <form action="post_delbook/" method="post" class="form-group">
+                {% csrf_token %}
+                <label for="delISBN">ISBN：</label>
+                <input id="delISBN" type="text" name="del_ISBN" class="form-control">
+                <input type="submit" value="OK" class="su-btn">
+            </form>
+        </div>
 
-<div id="update_book" style="display: none;">
-    <form method="get" target="post_channel" class="form-group">
-        {% csrf_token %}
-        <label for="pull_ISBN"></label><input id="pull_ISBN" type="text" name="pull_ISBN" class="form-control">
-        <input id="submit_pull" type="submit" value="查询" class="su-btn"><br>
-        <span id="querry_error" style="display: none;">该图书不存在！</span>
-    </form>
-    <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;"  class="form-group">
-        {% csrf_token %}
-        <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" class="form-control"><br>
-        <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" class="form-control"><br>
-        <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author" class="form-control"><br>
-        <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location" class="form-control"><br>
-        <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type" class="form-control form-control-lg"><br>
-        <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher" class="form-control form-control-lg">
-        <input type="submit" value="OK" class="su-btn">
-    </form>
-    <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
-</div>
-   </div>
-    <table class="data_table table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">ISBN</th>
-            <th scope="col">图书名称</th>
-            <th scope="col">作者</th>
-            <th scope="col">位置</th>
-            <th scope="col">图书种类</th>
-            <th scope="col">出版社</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in books %}
-        <tr>
-            <td>{{ item.ISBN }}</td>
-            <td>{{ item.book_name }}</td>
-            <td>{{ item.author }}</td>
-            <td>{{ item.location }}</td>
-            <td>{{ item.book_type__book_type_name }}</td>
-            <td>{{ item.publisher__publisher_name }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div id="update_book" style="display: none;">
+            <form method="get" target="post_channel" class="form-group">
+                {% csrf_token %}
+                <label for="pull_ISBN"></label><input id="pull_ISBN" type="text" name="pull_ISBN" class="form-control">
+                <input id="submit_pull" type="submit" value="查询" class="su-btn"><br>
+                <span id="querry_error" style="display: none;">该图书不存在！</span>
+            </form>
+            <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;"  class="form-group">
+                {% csrf_token %}
+                <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" class="form-control"><br>
+                <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" class="form-control"><br>
+                <label for="update_author">作者：</label><input id="update_author" type="text" name="update_author" class="form-control"><br>
+                <label for="update_location">图书位置：</label><input id="update_location" type="text" name="update_location" class="form-control"><br>
+                <label for="update_book_type">图书类别：</label><input id="update_book_type" type="text" name="update_book_type" class="form-control form-control-lg"><br>
+                <label for="update_publisher">出版社：</label><input id="update_publisher" type="text" name="update_publisher" class="form-control form-control-lg">
+                <input type="submit" value="OK" class="su-btn">
+            </form>
+            <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
+        </div>
+    </div>
+    <div class="book-roll panel-footer" style="height:600px;overflow: auto;margin-top:30px;">
+        <table class="data_table table" id="userTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ISBN</th>
+                    <th scope="col">图书名称</th>
+                    <th scope="col">作者</th>
+                    <th scope="col">位置</th>
+                    <th scope="col">图书种类</th>
+                    <th scope="col">出版社</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in books %}
+                <tr>
+                    <td>{{ item.ISBN }}</td>
+                    <td>{{ item.book_name }}</td>
+                    <td>{{ item.author }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>{{ item.book_type__book_type_name }}</td>
+                    <td>{{ item.publisher__publisher_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}
 {% block JsScript %}

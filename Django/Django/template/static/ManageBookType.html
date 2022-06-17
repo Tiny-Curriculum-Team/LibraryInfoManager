@@ -2,39 +2,104 @@
 {% load static %}
 {% block title %} 图书类别管理 {% endblock title %}
 {% block content %}
-<table class="data_table">
+<style>
+    .su-btn{
+        border-color:skyblue;
+        background-color:#D9F2F4;
+        color:#FA9193;
+        font-weight:bolder;
+        font-size:20px;
+        width:200px;
+        height:50px;
+        margin-top:5px;
+    }
+    #removebooktype{
+       margin-top:20px;
+    }
+</style>
+<table class="data_table table table-striped container">
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>图书种类名称</th>
+        <tr class="table-success">
+            <th scope="col">ID</th>
+            <th scope="col">图书种类名称</th>
         </tr>
     </thead>
     <tbody>
         {% for item_type in booktypes %}
         <tr>
-            <td>{{ item_type.BookTypeID }}</td>
+            <th scope="row">{{ item_type.BookTypeID }}</th>
             <td>{{ item_type.book_type_name }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a type="button" onclick="$('#add_book_type').css('display', 'block');$('#remove_book_type').css('display', 'none');">添加图书种类</a>
-<a type="button" onclick="$('#remove_book_type').css('display', 'block');$('#add_book_type').css('display', 'none');">删除图书种类</a>
-<div id="add_book_type" style="display: none;">
-    <span>请按照“[图书种类名称]”格式填写，各种类之间用;隔开，「示例」：计算机类;百科类</span><br>
-    <form action="post_addbooktype/" method="post">
-        {% csrf_token %}
-        <input id="addbooktype" type="text" name="addType">
-        <input type="submit" value="OK">
-    </form>
+<!--<a type="button" class="btn btn-primary btn-lg" onclick="$('#add_book_type').css('display', 'block');$('#remove_book_type').css('display', 'none');">添加图书种类</a>-->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal">
+  添加图书种类
+</button>
+<!--<a type="button" class="su-btn" onclick="$('#remove_book_type').css('display', 'block');$('#add_book_type').css('display', 'none');">删除图书种类</a>-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">添加图书种类</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>请按照“[图书种类名称]”格式填写，各种类之间用;隔开，「示例」：计算机类;百科类</span><br>
+        <form action="post_addbooktype/" method="post" style="margin-top:20px">
+            {% csrf_token %}
+            <input type="text" name="addType" class="form-control" aria-label="With textarea"><br>
+            <input type="submit" value="OK" class="su-btn" style="float:right">
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
-<div id="remove_book_type" style="display: none;">
-    <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
-    <form action="post_delbooktype/" method="post">
-        {% csrf_token %}
-        <input id="removebooktype" type="text" name="delType">
-        <input type="submit" value="OK">
-    </form>
-    <span>「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！</span><br>
+<!--<div id="add_book_type" class="alert alert-warning alert-dismissible fade show" role="alert" role="alert" style="display: none;">-->
+<!--    <span>请按照“[图书种类名称]”格式填写，各种类之间用;隔开，「示例」：计算机类;百科类</span><br>-->
+<!--    <form action="post_addbooktype/" method="post">-->
+<!--        {% csrf_token %}-->
+<!--        <input id="addbooktype" type="text" name="addType">-->
+<!--        <input type="submit" value="OK">-->
+<!--    </form>-->
+<!--</div>-->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModa">
+  删除图书种类
+</button>
+<div class="modal fade" id="exampleModa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLa" aria-hidden="true" style="height:500px;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLa">删除图书种类</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
+        <form action="post_delbooktype/" method="post">
+            {% csrf_token %}
+            <input id="removebooktype" type="text" name="delType" class="form-control" aria-label="With textarea"><br>
+            <input type="submit" value="OK" class="su-btn" style="float:right">
+        </form>
+        <div class="alert alert-warning" role="alert" style="margin-top:60px;">
+            「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！
+        </div>
+<!--    <span>「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！</span>-->
+      </div>
+    </div>
+  </div>
 </div>
+<!--<div id="remove_book_type" style="display: none;">-->
+<!--    <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>-->
+<!--    <form action="post_delbooktype/" method="post">-->
+<!--        {% csrf_token %}-->
+<!--        <input id="removebooktype" type="text" name="delType">-->
+<!--        <input type="submit" value="OK">-->
+<!--    </form>-->
+<!--    <span>「温馨提示」：删除某图书种类时，相应的图书也会被一并删除，操作需谨慎！</span><br>-->
+<!--</div>-->
 {% endblock content %}
