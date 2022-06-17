@@ -34,7 +34,7 @@ def show_recordings(request):
         return redirect("/user/sign_in/")
     elif not current_user.is_admin:
         user_id = int(request.session.get('_auth_user_id'))
-        conditions['userID'] = user_id
+        conditions['user_id'] = user_id
     try:
         time = request.POST['time']
         state = request.POST['state']
