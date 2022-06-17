@@ -158,7 +158,6 @@ $("#submit_pull").on("click", function () {
 })
 
 $(function (){
-    console.log(csrf_token)
     $.ajax({
         headers: {
             'X-CSRFToken': csrf_token

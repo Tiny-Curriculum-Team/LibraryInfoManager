@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} 用户管理 {% endblock title %}
+{% block content %}
+<form>
+    {% csrf_token %}
+    <label for="profile_UserID">账号ID：</label>
+    <input id="profile_UserID" type="text" name="UserID" readonly value="{{ User.UserID }}"><br>
+
+    <label for="profile_nickname">用户名：</label>
+    <input id="profile_nickname" type="text" name="nickname" readonly value="{{ User.nickname }}"><br>
+
+    <label for="profile_name">姓名：</label>
+    <input id="profile_name" type="text" name="name" readonly value="{{ User.name }}"><br>
+
+    <label for="profile_tel">电话：</label>
+    <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}"><br>
+
+    <label for="profile_last_login">最近登录时间：</label>
+    <input id="profile_last_login" type="text" name="last_login" readonly value="{{ User.last_login }}"><br>
+
+    <label for="profile_trustworthiness">信用点：</label>
+    <input id="profile_trustworthiness" type="text" name="trustworthiness" readonly value="{{ User.trustworthiness }}"><br>
+
+    <label for="profile_max_borrow_day">最长可借阅天数：</label>
+    <input id="profile_max_borrow_day" type="text" name="max_borrow_day" readonly value="{{ User.max_borrow_day }}"><br>
+
+    <label for="profile_max_borrow_count">最多可借阅本数：</label>
+    <input id="profile_max_borrow_count" type="text" name="max_borrow_count" readonly value="{{ User.max_borrow_count }}"><br>
+</form>
+<input id="goToEdit" type="button" value="编辑">
+<input id="goToChangePassword" type="button" value="修改密码">
+
+<form id="userChangePassword" style="display: none">
+    <label>旧密码：</label><input id="userPassword" type="password">
+    <label>新密码：</label><input id="userBassword" type="text">
+</form>
+{% endblock content %}
+
+{% block JsScript %}
+<script>
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let edit_status_value = 0;
+    let chpwd_status_value = 0;
+    $('#goToEdit').on("click", function (){
+        if (edit_status_value){
+            $('#profile_nickname').attr("readonly", "readonly");
+            $('#profile_name').attr("readonly", "readonly");
+            $('#profile_tel').attr("readonly", "readonly");
+            $(this).val("编辑");
+            edit_status_value = 0;
+
+            let nickname = $('#profile_nickname').val()
+            let name = $('#profile_name').val()
+            let tele =  $('#profile_tel').val()
+
+            $.ajax({
+                headers: {
+                    'X-CSRFToken': csrf_token
+                },
+                url: '/user/post_edited_profile/',
+                type: "POST",
+                data: {
+                    "nickname": nickname,
+                    "name": name,
+                    "tele": tele
+                },
+                success: (res) => {
+                    if (res['success']){
+                        alert("修改成功！")
+                    } else {
+                        alert("修改失败！请稍后重试！")
+                    }
+                    location.reload();
+                }
+            })
+        } else {
+            $('#profile_nickname').removeAttr("readonly");
+            $('#profile_name').removeAttr("readonly");
+            $('#profile_tel').removeAttr("readonly");
+            $(this).val("完成");
+            edit_status_value = 1;
+        }
+    })
+
+    $('#goToChangePassword').on("click", function (){
+        let userPassword = $("#userPassword").val()
+        let userBassword = $("#userBassword").val()
+        if (chpwd_status_value){
+            if (userPassword !== userBassword) {
+                $.ajax({
+                    headers: {
+                        'X-CSRFToken': csrf_token
+                    },
+                    url: '/user/post_edited_password/',
+                    type: "POST",
+                    data: {
+                        "old_password": userPassword,
+                        "new_password": userBassword,
+                    },
+                    success: (res) => {
+                        if (res['success']) {
+                            alert("修改成功！")
+                        } else {
+                            alert("修改失败！密码输入有误！")
+                        }
+                        location.reload();
+                    }
+                })
+            } else {
+                alert("旧密码与新密码不能一致！")
+            }
+            $("#userChangePassword").css("display", "none");
+            $(this).val("修改密码");
+            chpwd_status_value = 0;
+        } else {
+            $("#userChangePassword").css("display", "block");
+            $(this).val("完成");
+            chpwd_status_value = 1;
+        }
+    })
+</script>
+{% endblock JsScript %}
