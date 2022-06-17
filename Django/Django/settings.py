@@ -84,11 +84,16 @@ WSGI_APPLICATION = 'Django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'LIMS',
+        # 'HOST': '192.168.192.1',
+        # 'PORT': 3306,
+        # 'USER': 'anyone',
+        # 'PASSWORD': 'KeXie@5108space'
         'NAME': 'LIMS',
         'HOST': 'localhost',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': 'gjy214'
+        'PASSWORD': 'Szq.20210422150600'
     }
 }
 
