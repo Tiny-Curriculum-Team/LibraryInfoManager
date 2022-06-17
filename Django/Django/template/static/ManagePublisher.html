@@ -2,8 +2,22 @@
 {% load static %}
 {% block title %} 出版社管理 {% endblock title %}
 {% block content %}
-<table class="data_table">
-    <thead>
+<style>
+    .su-btn{
+        border-color:skyblue;
+        background-color:#D9F2F4;
+        color:#FA9193;
+        font-weight:bolder;
+        font-size:20px;
+        width:200px;
+        height:50px;
+        margin-top:5px;
+        float:right;
+    }
+</style>
+<div class="book-roll panel-footer" style="height:600px;overflow: auto;margin-top:30px;">
+    <table class="data_table container table">
+    <thead class="thead-dark">
         <tr>
             <th>ID</th>
             <th>出版社名称</th>
@@ -18,29 +32,58 @@
         {% endfor %}
     </tbody>
 </table>
-<a type="button" onclick="
-    $('#add_publisher').css('display', 'block');
-    $('#remove_publisher').css('display', 'none');
-">添加出版社</a>
-<a type="button" onclick="
-    $('#remove_publisher').css('display', 'block');
-    $('#add_publisher').css('display', 'none');
-">删除出版社</a>
-<div id="add_publisher" style="display: none;">
+</div>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal">
+  添加出版社
+</button>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleMod">
+  删除出版社
+</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">添加出版社</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="add_publisher">
     <span>请按照“[出版社名称]”格式填写，各种类之间用;隔开，「示例」：人民邮电;机械工业</span><br>
     <form action="post_addpublisher/" method="post">
         {% csrf_token %}
-        <input id="addpublisher" type="text" name="addPublisher">
-        <input type="submit" value="OK">
+        <input id="addpublisher" type="text" name="addPublisher" class="form-control" aria-label="With textarea"><br>
+        <input type="submit" value="OK" class="su-btn">
     </form>
 </div>
-<div id="remove_publisher" style="display: none;">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleMod" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLab">删除出版社</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="remove_publisher">
     <span>请填写想删除的图书种类ID，各种类之间用;隔开。</span><br>
     <form action="post_delpublisher/" method="post">
         {% csrf_token %}
-        <input id="removepublisher" type="text" name="delPublisher">
-        <input type="submit" value="OK">
+        <input id="removepublisher" type="text" name="delPublisher" class="form-control" aria-label="With textarea"><br>
+        <input type="submit" value="OK" class="su-btn">
     </form>
-    <span>「温馨提示」：删除某出版社时，相应的图书也会被一并删除，操作需谨慎！</span><br>
+     <div class="alert alert-warning" role="alert" style="margin-top:60px;">
+         <span>「温馨提示」：删除某出版社时，相应的图书也会被一并删除，操作需谨慎！</span><br>
+     </div>
+</div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
