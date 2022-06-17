@@ -12,26 +12,61 @@
         font-size:20px;
     }
     a{
-        text-decoration:none;
+        text-decoration:none!important;
+        color:black!important;
     }
+    .box {
+    display: flex;
+    justify-content: space-evenly; /* 水平均匀分布 */
+    align-items: center; /* 垂直居中 */
+    flex-direction: column;
+    width: 520px;
+    height: 520px;
+}
+.inner {
+    width: 300px;
+    height: 300px;
+    line-height: 75px;
+    margin-top:30px;
+    /*background-color:pink;*/
+    text-align: center;
+    font-size:20px;
+
+}
+
 </style>
-<div class="UserBorrow">
-    <div class="box-center">
-        <div class="container">
-          <div class="row row-cols-4">
-            <div class="col"><a href="{% url 'users:userProfile' %}">用户信息</a></div>
+<!--<div class="UserBorrow">-->
+<!--    <div class="box-center">-->
+<!--        <div class="container">-->
+<!--          <div class="row row-cols-4">-->
+<!--            <div class="col"><a href="{% url 'users:userProfile' %}">用户信息</a></div>-->
+<!--            {% if not isAdmin %}-->
+<!--            <div class="col"><a href="{% url 'borrow:orderPage' %}">借阅图书</a></div>-->
+<!--            <div class="col"><a href="{% url 'borrow:managePage' %}">借阅记录</a></div>-->
+<!--            {% else %}-->
+<!--            <div class="col"><a href="{% url 'users:userManage' %}">用户管理</a></div>-->
+<!--            <div class="col"><a href="{% url 'publishers:mp' %}">出版社管理</a></div>-->
+<!--            <div class="col"><a href="{% url 'book_types:mbt' %}">图书种类管理</a></div>-->
+<!--            <div class="col"><a href="{% url 'books:mb' %}">图书管理</a></div>-->
+<!--            <div class="col"><a href="{% url 'borrow:managePage' %}">借阅记录管理</a></div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+ <div class="box container UserBorrow">
+            <div class="inner" style="background-color:#74b9ff"><a href="{% url 'users:userProfile' %}">用户信息</a></div>
             {% if not isAdmin %}
-            <div class="col"><a href="{% url 'borrow:orderPage' %}">借阅图书</a></div>
-            <div class="col"><a href="{% url 'borrow:managePage' %}">借阅记录</a></div>
+            <div class="inner" style="background-color:#81ecec"><a href="{% url 'borrow:orderPage' %}">借阅图书</a></div>
+            <div class="inner" style="background-color:#55efc4"><a href="{% url 'borrow:managePage' %}">借阅记录</a></div>
             {% else %}
-            <div class="col"><a href="{% url 'users:userManage' %}">用户管理</a></div>
-            <div class="col"><a href="{% url 'publishers:mp' %}">出版社管理</a></div>
-            <div class="col"><a href="{% url 'book_types:mbt' %}">图书种类管理</a></div>
-            <div class="col"><a href="{% url 'books:mb' %}">图书管理</a></div>
-            <div class="col"><a href="{% url 'borrow:managePage' %}">借阅记录管理</a></div>
+            <div class="inner" style="background-color:#a29bfe"><a href="{% url 'users:userManage' %}">用户管理</a></div>
+            <div class="inner" style="background-color:#0984e3"><a href="{% url 'publishers:mp' %}">出版社管理</a></div>
+            <div class="inner" style="background-color:#6c5ce7"><a href="{% url 'book_types:mbt' %}">图书种类管理</a></div>
+            <div class="inner" style="background-color:#70a1ff"><a href="{% url 'books:mb' %}">图书管理</a></div>
+            <div class="inner" style="background-color:#00cec9"><a href="{% url 'borrow:managePage' %}">借阅记录管理</a></div>
             {% endif %}
-          </div>
         </div>
-    </div>
-</div>
+
 {% endblock content %}
