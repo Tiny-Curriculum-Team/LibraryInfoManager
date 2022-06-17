@@ -21,7 +21,7 @@ from Users.models import User
 #            [X] 5. connect the credit with max_borrow_count and max_borrow_day.
 #            [√] 6. credit compute system.
 #            [ ] 7. complex query.
-#            [ ] 8. finish the router.
+#            [√] 8. finish the router.
 #            [ ] 9. Test the whole system.
 
 
