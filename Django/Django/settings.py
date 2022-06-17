@@ -141,3 +141,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "Users.User"
 
+MAX_BORROW_DAY = 30
+MAX_BORROW_COUNT = 10
+
