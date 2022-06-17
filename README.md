@@ -16,53 +16,81 @@ It's based on _**Python**_, _**Django**_ and _**MySQL**_.
 LibraryInfoManager
 ├── ConnectionTemplate.py
 ├── Django
+│   ├── Book
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── BookType
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── Borrow
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
 │   ├── Django
 │   │   ├── asgi.py
 │   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   ├── __init__.cpython-38.pyc
-│   │   │   ├── settings.cpython-38.pyc
-│   │   │   ├── urls.cpython-38.pyc
-│   │   │   └── wsgi.cpython-38.pyc
 │   │   ├── settings.py
 │   │   ├── template
 │   │   │   ├── base.html
 │   │   │   ├── footer.html
 │   │   │   ├── header.html
 │   │   │   └── static
-│   │   │       ├── login.html
-│   │   │       └── signup.html
+│   │   │       ├── MainPanel.html
+│   │   │       ├── ManageBook.html
+│   │   │       ├── ManageBookType.html
+│   │   │       ├── ManageBorrow.html
+│   │   │       ├── ManagePublisher.html
+│   │   │       ├── ManageUsers.html
+│   │   │       ├── OrderBook.html
+│   │   │       ├── SignIn.html
+│   │   │       ├── SignUp.html
+│   │   │       └── UserProfile.html
 │   │   ├── urls.py
 │   │   └── wsgi.py
+│   ├── MainPanel
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
 │   ├── manage.py
+│   ├── Publisher
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
 │   └── Users
 │       ├── apps.py
 │       ├── forms.py
 │       ├── __init__.py
-│       ├── migrations
-│       │   ├── 0001_initial.py
-│       │   ├── __init__.py
-│       │   └── __pycache__
-│       │       ├── 0001_initial.cpython-38.pyc
-│       │       └── __init__.cpython-38.pyc
 │       ├── models.py
-│       ├── __pycache__
-│       │   ├── apps.cpython-38.pyc
-│       │   ├── forms.cpython-38.pyc
-│       │   ├── __init__.cpython-38.pyc
-│       │   ├── models.cpython-38.pyc
-│       │   ├── urls.cpython-38.pyc
-│       │   └── views.cpython-38.pyc
 │       ├── tests.py
 │       ├── urls.py
 │       └── views.py
 ├── InitDBToolkit.py
+├── Initialize.bat
 ├── Initialize.sh
 ├── lib
 │   ├── encrypt.py
-│   ├── __pycache__
-│   │   ├── encrypt.cpython-38.pyc
-│   │   └── utils.cpython-38.pyc
 │   └── utils.py
 ├── LICENSE
 ├── README.md
@@ -72,7 +100,7 @@ LibraryInfoManager
 │   └── InitData.sql
 └── Test.py
 
-12 directories, 45 files
+12 directories, 73 files
 ```
 </details>
 
@@ -85,7 +113,6 @@ LibraryInfoManager
 - Book(**ISBN**, book_name, author, location, status, _book_type_id_, _publisher_id_)
 - Users(**UserID**, name, nickname, password, tel, is_admin, is_staff, is_active, last_login, trustworthiness, max_borrow_day, max_borrow_count)
 - Borrow(**OperationID**, borrow_time, status, give_back_time, _book_id_, _user_id_)
-- Manage(**OperationID**, operate_type, operate_time, _book_id_, _user_id_)
 
 <details>
 
@@ -106,7 +133,7 @@ mysql> desc BookType;
 | BookTypeID     | int         | NO   | PRI | NULL    | auto_increment |
 | book_type_name | varchar(40) | NO   |     | NULL    |                |
 +----------------+-------------+------+-----+---------+----------------+
-2 rows in set (0.00 sec)
+2 rows in set (0.01 sec)
 
 mysql> desc Book;
 +--------------+-------------+------+-----+---------+-------+
@@ -116,10 +143,11 @@ mysql> desc Book;
 | book_name    | varchar(40) | NO   |     | NULL    |       |
 | author       | varchar(40) | NO   |     | NULL    |       |
 | location     | varchar(20) | NO   |     | NULL    |       |
+| status       | varchar(5)  | NO   |     | NULL    |       |
 | book_type_id | int         | NO   | MUL | NULL    |       |
 | publisher_id | int         | NO   | MUL | NULL    |       |
 +--------------+-------------+------+-----+---------+-------+
-6 rows in set (0.00 sec)
+7 rows in set (0.00 sec)
 
 mysql> desc Users;
 +------------------+---------------+------+-----+---------+----------------+
@@ -138,7 +166,7 @@ mysql> desc Users;
 | max_borrow_day   | int           | YES  |     | NULL    |                |
 | max_borrow_count | int           | YES  |     | NULL    |                |
 +------------------+---------------+------+-----+---------+----------------+
-12 rows in set (0.00 sec)
+12 rows in set (0.01 sec)
 
 mysql> desc Borrow;
 +----------------+-------------+------+-----+---------+----------------+
@@ -146,24 +174,12 @@ mysql> desc Borrow;
 +----------------+-------------+------+-----+---------+----------------+
 | OperationID    | int         | NO   | PRI | NULL    | auto_increment |
 | borrow_time    | datetime(6) | NO   |     | NULL    |                |
-| status         | varchar(7)  | NO   |     | NULL    |                |
-| give_back_time | datetime(6) | YES  |     | NULL    |                |
+| status         | varchar(8)  | NO   |     | NULL    |                |
+| give_back_time | datetime(6) | NO   |     | NULL    |                |
 | book_id        | varchar(20) | NO   | MUL | NULL    |                |
 | user_id        | int         | NO   | MUL | NULL    |                |
 +----------------+-------------+------+-----+---------+----------------+
 6 rows in set (0.00 sec)
-
-mysql> desc Manage;
-+--------------+-------------+------+-----+---------+----------------+
-| Field        | Type        | Null | Key | Default | Extra          |
-+--------------+-------------+------+-----+---------+----------------+
-| OperationID  | int         | NO   | PRI | NULL    | auto_increment |
-| operate_type | varchar(20) | NO   |     | NULL    |                |
-| operate_time | datetime(6) | NO   |     | NULL    |                |
-| book_id      | varchar(20) | NO   | MUL | NULL    |                |
-| user_id      | int         | NO   | MUL | NULL    |                |
-+--------------+-------------+------+-----+---------+----------------+
-5 rows in set (0.01 sec)
 ```
 
 <summary>The Structure of each table</summary>
