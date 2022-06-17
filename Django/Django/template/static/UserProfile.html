@@ -2,31 +2,57 @@
 {% load static %}
 {% block title %} 用户管理 {% endblock title %}
 {% block content %}
-<form>
+<div class="container" style="margin-top:20px">
+    <form class="form-group">
     {% csrf_token %}
-    <label for="profile_UserID">账号ID：</label>
-    <input id="profile_UserID" type="text" name="UserID" readonly value="{{ User.UserID }}"><br>
-
-    <label for="profile_nickname">用户名：</label>
-    <input id="profile_nickname" type="text" name="nickname" readonly value="{{ User.nickname }}"><br>
-
-    <label for="profile_name">姓名：</label>
-    <input id="profile_name" type="text" name="name" readonly value="{{ User.name }}"><br>
-
-    <label for="profile_tel">电话：</label>
-    <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}"><br>
-
-    <label for="profile_last_login">最近登录时间：</label>
-    <input id="profile_last_login" type="text" name="last_login" readonly value="{{ User.last_login }}"><br>
-
-    <label for="profile_trustworthiness">信用点：</label>
-    <input id="profile_trustworthiness" type="text" name="trustworthiness" readonly value="{{ User.trustworthiness }}"><br>
-
-    <label for="profile_max_borrow_day">最长可借阅天数：</label>
-    <input id="profile_max_borrow_day" type="text" name="max_borrow_day" readonly value="{{ User.max_borrow_day }}"><br>
-
-    <label for="profile_max_borrow_count">最多可借阅本数：</label>
-    <input id="profile_max_borrow_count" type="text" name="max_borrow_count" readonly value="{{ User.max_borrow_count }}"><br>
+    <div class="form-group row">
+        <label for="profile_UserID" class="col-form-label col-form-label-lg">账号ID：</label>
+        <div class="col-sm-10">
+            <input id="profile_UserID" type="text" name="UserID" readonly value="{{ User.UserID }}" class="form-control form-control-lg">
+        </div>
+   </div>
+   <div class="form-group row">
+        <label for="profile_nickname" class="col-form-label col-form-label-lg">用户名：</label>
+        <div class="col-sm-10">
+            <input id="profile_nickname" type="text" name="nickname" readonly value="{{ User.nickname }}" class="form-control form-control-lg">
+        </div>
+  </div>
+  <div class="form-group row">
+        <label for="profile_name" class="col-form-label col-form-label-lg">姓名&#12288;：</label>
+        <div class="col-sm-10">
+            <input id="profile_name" type="text" name="name" readonly value="{{ User.name }}" class="form-control form-control-lg">
+        </div>
+  </div>
+  <div class="form-group row">
+        <label for="profile_tel" class="col-form-label col-form-label-lg">电话&#12288;：</label>
+        <div class="col-sm-10">
+            <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}" class="form-control form-control-lg">
+        </div>
+  </div>
+  <div class="form-group row">
+        <label for="profile_last_login" class="col-form-label col-form-label-lg" style="margin-left: -58px">最近登录时间：</label>
+        <div class="col-sm-10">
+            <input id="profile_last_login" type="text" name="last_login" readonly value="{{ User.last_login }}" class="form-control form-control-lg">
+        </div>
+  </div>
+  <div class="form-group row">
+         <label for="profile_trustworthiness" class="col-form-label col-form-label-lg">信用点：</label>
+        <div class="col-sm-10">
+        <input id="profile_trustworthiness" type="text" name="trustworthiness" readonly value="{{ User.trustworthiness }}" class="form-control form-control-lg">
+        </div>
+  </div>
+  <div class="form-group row">
+      <label for="profile_max_borrow_day" class="col-form-label col-form-label-lg" style="margin-left: -78px">最长可借阅天数：</label>
+      <div class="col-sm-10">
+        <input id="profile_max_borrow_day" type="text" name="max_borrow_day" readonly value="{{ User.max_borrow_day }}" class="form-control form-control-lg">
+      </div>
+  </div>
+  <div class="form-group row">
+    <label for="profile_max_borrow_count" class="col-form-label col-form-label-lg" style="margin-left: -78px">最多可借阅本数：</label>
+      <div class="col-sm-10">
+        <input id="profile_max_borrow_count" type="text" name="max_borrow_count" readonly value="{{ User.max_borrow_count }}" class="form-control form-control-lg">
+      </div>
+  </div>
 </form>
 <input id="goToEdit" type="button" value="编辑">
 <input id="goToChangePassword" type="button" value="修改密码">
@@ -35,6 +61,7 @@
     <label>旧密码：</label><input id="userPassword" type="password">
     <label>新密码：</label><input id="userBassword" type="text">
 </form>
+</div>
 {% endblock content %}
 
 {% block JsScript %}

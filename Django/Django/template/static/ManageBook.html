@@ -76,7 +76,7 @@
                 <input id="submit_pull" type="submit" value="查询" class="su-btn"><br>
                 <span id="querry_error" style="display: none;">该图书不存在！</span>
             </form>
-            <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;"  class="form-group">
+            <form id="update_book_info" action="post_updatebook/" method="post" style="display: none;" class="form-group">
                 {% csrf_token %}
                 <label for="update_ISBN">ISBN：</label><input id="update_ISBN" type="text" name="update_ISBN" class="form-control"><br>
                 <label for="update_book_name">书名：</label><input id="update_book_name" type="text" name="update_book_name" class="form-control"><br>

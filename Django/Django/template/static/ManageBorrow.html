@@ -2,22 +2,27 @@
 {% load static %}
 {% block title %} 登录 {% endblock title %}
 {% block content %}
-<table class="data_table">
-    <thead>
+<style>
+    .btn-outline-primary{
+        margin-left: 50px;
+    }
+</style>
+<table class="data_table container table">
+    <thead class="thead-dark">
         <tr>
-            <th>操作序列号</th>
-            <th>借阅时间</th>
-            <th>图书状态</th>
-            <th>归还时间</th>
-            <th>借阅图书</th>
-            <th>借阅人</th>
+            <th scope="col">操作序列号</th>
+            <th scope="col">借阅时间</th>
+            <th scope="col">图书状态</th>
+            <th scope="col">归还时间</th>
+            <th scope="col">借阅图书</th>
+            <th scope="col">借阅人</th>
         </tr>
     </thead>
     <tbody>
         {% if borrows %}
             {% for item in borrows %}
             <tr>
-                <td>{{ item.OperationID }}</td>
+                <th scope="row">{{ item.OperationID }}</th>
                 <td>{{ item.borrow_time }}</td>
                 <td>{{ item.status }}</td>
                 <td>{{ item.give_back_time }}</td>
@@ -42,16 +47,28 @@
 {% endif %}
 
 {% if isAdmin %}
-<a type="button" onclick="
+<a type="button" class="btn btn-outline-primary" onclick="
     $('#update_recording').css('display', 'block');
     $('#remove_recording').css('display', 'none');
 ">修改记录</a>
-
-<div id="update_recording" style="display: none;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  修改
+</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="update_recording">
     <form method="get" target="post_channel">
         {% csrf_token %}
-        <label for="pull_operate_id"></label><input id="pull_operate_id" type="text" name="pull_operate_id">
-        <input id="submit_pull" type="submit" value="查询"><br>
+        <label for="pull_operate_id"></label><input id="pull_operate_id" type="text" name="pull_operate_id" class="form-control">
+        <input id="submit_pull" type="submit" value="查询" style="float:right;"><br>
         <span id="querry_error" style="display: none;">不存在此操作记录！</span>
     </form>
     <form id="update_book_info" action="/brr/post_update_recording/" method="post" style="display: none;">
@@ -69,8 +86,11 @@
     </form>
     <iframe id="post_channel" name="post_channel" style="display: none;"></iframe>
 </div>
-
-<a type="button" onclick="
+      </div>
+    </div>
+  </div>
+</div>
+<a type="button" class="btn btn-outline-primary" onclick="
     $('#remove_recording').css('display', 'block');
     $('#update_recording').css('display', 'none');
 ">删除记录</a>
