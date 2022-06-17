@@ -115,7 +115,12 @@ def user_manage(request):
         'UserID', 'name', 'nickname', 'tel',
         'is_active', 'last_login', 'trustworthiness',
         'max_borrow_day', 'max_borrow_count')
-    return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users, 'isAdmin': current_user.is_admin})
+    return render(request, 'static/ManageUsers.html', {
+        'isOffline': current_user.is_anonymous,
+        'active_users': users,
+        'inactive_users': del_users,
+        'isAdmin': current_user.is_admin
+    })
 
 
 def remove_user(request):
@@ -188,14 +193,17 @@ def user_profile_view(request):
         user = User.objects.filter(UserID=current_user.UserID).values(
             'UserID', 'name', 'nickname', 'tel', 'last_login'
         )
-        return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
     else:
         user = User.objects.filter(UserID=current_user.UserID).values(
             'UserID', 'name', 'nickname', 'tel',
             'last_login', 'trustworthiness',
             'max_borrow_day', 'max_borrow_count',
         )
-        return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
+    return render(request, 'static/UserProfile.html', {
+        'isOffline': current_user.is_anonymous,
+        'User': user[0],
+        'isAdmin': current_user.is_admin
+    })
 
 
 def update_user_profile(request):

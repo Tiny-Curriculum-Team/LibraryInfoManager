@@ -53,7 +53,11 @@ def show_recordings(request):
     except Exception as e:
         print(e)
     borrows = Borrow.objects.filter(**conditions).values()
-    return render(request, 'static/ManageBorrow.html', {'borrows': borrows, 'isAdmin': current_user.is_admin})
+    return render(request, 'static/ManageBorrow.html', {
+        'isOffline': current_user.is_anonymous,
+        'borrows': borrows,
+        'isAdmin': current_user.is_admin
+    })
 
 
 def order_book_view(request):
@@ -67,7 +71,11 @@ def order_book_view(request):
             'book_type__book_type_name',
             'publisher__publisher_name',
         )
-        return render(request, 'static/OrderBook.html', {'books': books, 'isAdmin': current_user.is_admin})
+        return render(request, 'static/OrderBook.html', {
+            'isOffline': current_user.is_anonymous,
+            'books': books,
+            'isAdmin': current_user.is_admin
+        })
 
 
 def pull_borrow_info(request):

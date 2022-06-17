@@ -26,10 +26,15 @@
           </div>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+        <span>{{ user_info }}</span>
+        <form class="form-inline my-2 my-lg-0">
 <!--        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
 <!--        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="margin-left:10px;">登出</button>
+        {% if isOffline %}
+        <a class="btn btn-secondary my-2 my-sm-0" type="submit" href="{% url 'users:signin' %}">登录</a>
+        {% else %}
+        <a class="btn btn-secondary my-2 my-sm-0" type="submit" href="{% url 'users:logout' %}">登出</a>
+        {% endif %}
       </form>
 
     </div>
