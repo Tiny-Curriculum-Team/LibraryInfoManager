@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model, authenticate
@@ -16,22 +16,26 @@ def user_login(request):
             user = authenticate(username=data['username'], password=data['password'])
             if user:
                 login(request, user)
-                return HttpResponse("Success!")
+                messages.info(request, "登录成功!")
+                return redirect("/")
             else:
-                return HttpResponse("账号或密码输入有误。请重新输入~")
+                messages.error(request, "账号或密码输入有误。请重新输入~")
         else:
-            return HttpResponse("账号或密码输入不合法")
+            messages.error(request, "账号或密码输入不合法")
+        return redirect("/user/sign_in/")
     elif request.method == 'GET':
         user_login_form = UserLoginForm()
         context = {'form': user_login_form}
         return render(request, 'static/SignIn.html', context)
     else:
-        return HttpResponse("请使用GET或POST请求数据")
+        messages.error(request, "请使用GET或POST请求数据")
+        return redirect("/user/sign_in/")
 
 
 def user_logout(request):
     logout(request)
-    return HttpResponse("Success!")
+    messages.info(request, "登出成功!")
+    return redirect("/")
 
 
 def user_register(request):
@@ -42,15 +46,17 @@ def user_register(request):
             new_user.set_password(user_register_form.cleaned_data['password1'])
             new_user.save()
             login(request, new_user)
-            return HttpResponse("Signing up succeeded!")
+            messages.info(request, "注册成功！")
         else:
-            return HttpResponse("注册表单输入有误。请重新输入~")
+            messages.info(request, "注册表单输入有误。请重新输入~")
+        return redirect("/user/sign_in/")
     elif request.method == 'GET':
         user_register_form = UserRegisterForm()
         context = {'form': user_register_form}
         return render(request, 'static/SignUp.html', context)
     else:
-        return HttpResponse("请使用GET或POST请求数据")
+        messages.error(request, "请使用GET或POST请求数据")
+        return redirect("/user/sign_in/")
 
 
 def user_manage(request):
@@ -109,7 +115,6 @@ def user_manage(request):
         'UserID', 'name', 'nickname', 'tel',
         'is_active', 'last_login', 'trustworthiness',
         'max_borrow_day', 'max_borrow_count')
-    print(condition_u, "\n$$$$$$$$$$$$$$$$$conditions$$$$$$$$$$$$$$$$$$\n", condition_d)
     return render(request, 'static/ManageUsers.html', {'active_users': users, 'inactive_users': del_users, 'isAdmin': current_user.is_admin})
 
 
@@ -181,14 +186,16 @@ def user_profile_view(request):
         return redirect("/user/sign_in/")
     elif current_user.is_admin:
         user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel', 'last_login'
+        )
+        return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
+    else:
+        user = User.objects.filter(UserID=current_user.UserID).values(
             'UserID', 'name', 'nickname', 'tel',
             'last_login', 'trustworthiness',
             'max_borrow_day', 'max_borrow_count',
         )
         return render(request, 'static/UserProfile.html', {'User': user[0], 'isAdmin': current_user.is_admin})
-    else:
-        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
-        return redirect("/user/sign_in/")
 
 
 def update_user_profile(request):
