@@ -8,4 +8,7 @@ def show(request):
         messages.info(request, "您还未登录，请先登录！")
         return redirect("/user/sign_in/")
     user = request.user
-    return render(request, "static/MainPanel.html", {"isAdmin": user.is_admin})
+    return render(request, "static/MainPanel.html", {
+        'isOffline': user.is_anonymous,
+        "isAdmin": user.is_admin
+    })

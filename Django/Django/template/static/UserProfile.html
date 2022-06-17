@@ -38,7 +38,7 @@
   <div class="form-group row">
         <label for="profile_tel" class="col-form-label col-form-label-lg">电话&#12288;：</label>
         <div class="col-sm-10">
-            <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}" class="form-control form-control-lg">
+            <input id="profile_tel" type="text" name="tel" readonly value="{{ User.tel }}" class="form-control form-control-lg" oninput="value=value.replace(/[^\d]/g,'')">
         </div>
   </div>
   <div class="form-group row">
@@ -47,6 +47,7 @@
             <input id="profile_last_login" type="text" name="last_login" readonly value="{{ User.last_login }}" class="form-control form-control-lg">
         </div>
   </div>
+  {% if not isAdmin %}
   <div class="form-group row">
          <label for="profile_trustworthiness" class="col-form-label col-form-label-lg">信用点：</label>
         <div class="col-sm-10">
@@ -65,6 +66,7 @@
         <input id="profile_max_borrow_count" type="text" name="max_borrow_count" readonly value="{{ User.max_borrow_count }}" class="form-control form-control-lg">
       </div>
   </div>
+  {% endif %}
 </form>
 <input id="goToEdit" type="button" value="编辑" class="su-btn">
 <input id="goToChangePassword" type="button" value="修改密码" class="su-btn">

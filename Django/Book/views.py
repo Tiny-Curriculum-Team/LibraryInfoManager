@@ -118,7 +118,11 @@ def book_view(request):
     books = Book.objects.filter(**conditions).values('ISBN', 'book_name', 'author', 'location', 'status',
             'book_type__book_type_name',
             'publisher__publisher_name')
-    return render(request, 'static/ManageBook.html', {'books': books, 'isAdmin': current_user.is_admin})
+    return render(request, 'static/ManageBook.html', {
+        'isOffline': current_user.is_anonymous,
+        'books': books,
+        'isAdmin': current_user.is_admin
+    })
 
 
 def pull_book_type_list(request):

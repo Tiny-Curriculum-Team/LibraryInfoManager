@@ -69,7 +69,7 @@
     <form method="get" target="post_channel">
         {% csrf_token %}
         <label for="pull_operate_id"></label><input id="pull_operate_id" type="text" name="pull_operate_id" class="form-control">
-        <input id="submit_pull" type="submit" value="查询" style="float:right;"><br>
+        <input id="submit_pull" type="submit" value="查询" class="su-btn" style="float:right;"><br>
         <span id="querry_error" style="display: none;">不存在此操作记录！</span>
     </form>
     <form id="update_book_info" action="/brr/post_update_recording/" method="post" style="display: none;">
@@ -135,7 +135,7 @@
 
 {% else %}
 
-<a type="button">图书借阅</a>
+<a type="button" href="{% url 'borrow:orderPage' %}">图书借阅</a>
 
 {% endif %}
 
@@ -161,7 +161,7 @@
     <form id="query_db" action="" method="post" onsubmit="return save();">
         {% csrf_token %}
         <p>
-            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限" class="form-control">
+            <label for="time">近日借阅：</label><input id="time" type="text" name="time" placeholder="输入数字,默认不限" oninput="value=value.replace(/[^\d]/g,'')" class="form-control">
         </p>
         <p>
             <label for="state">图书状态：</label><select id="state" type="text" name="state" readonly="true" class="form-control">
@@ -177,7 +177,7 @@
             <label for="book">借阅图书：</label><input id="book" type="text" name="book" placeholder="指定图书的ISBN,默认不限" class="form-control">
         </p>
         <p>
-            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" class="form-control">
+            <label for="person">借阅人：</label><input id="person" type="text" name="person" placeholder="指定借阅人ID,默认不限" oninput="value=value.replace(/[^\d]/g,'')">
         </p>
         <input id="submit_post" type="submit" value="查询">
     </form>

@@ -42,7 +42,11 @@ def booktype_view(request):
         return redirect("/sign/in/")
     elif current_user.is_admin:
         book_types = BookType.objects.all()
-        return render(request, 'static/ManageBookType.html', {'booktypes': book_types, 'isAdmin': current_user.is_admin})
+        return render(request, 'static/ManageBookType.html', {
+            'isOffline': current_user.is_anonymous,
+            'booktypes': book_types,
+            'isAdmin': current_user.is_admin
+        })
     else:
         messages.info(request, "由于您还不是管理员，故访问被拒绝！")
         return redirect("/sign/in/")
