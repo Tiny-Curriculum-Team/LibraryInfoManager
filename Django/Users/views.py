@@ -46,7 +46,7 @@ def user_register(request):
             new_user.set_password(user_register_form.cleaned_data['password1'])
             new_user.save()
             login(request, new_user)
-            messages.info(request, "注册成功！")
+            messages.info(request, f"注册成功！你的账号ID为：{new_user.UserID}")
         else:
             messages.info(request, "注册表单输入有误。请重新输入~")
         return redirect("/user/sign_in/")
