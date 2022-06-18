@@ -52,7 +52,7 @@
     </tbody>
 </table>
 
-<table class="data_table" id="inactive_users" style="display: none;">
+<table class="data_table table table-striped" id="inactive_users" style="display: none;">
     <thead>
         <tr>
             <th>账号ID</th>
@@ -154,7 +154,7 @@ $('#quert_user').css('display','none');
 <div id="update_user" style="display: none;">
     <form method="get" target="post_channel" class="form-group">
         {% csrf_token %}
-        <label for="pull_UserID"></label><input id="pull_UserID" type="text" name="pull_UserID" class="form-control">
+        <label for="pull_UserID">要查询的账号ID:</label><input id="pull_UserID" type="text" name="pull_UserID" class="form-control">
         <input id="submit_pull" type="submit" value="查询" class="su-btn" style="float:right" class="form-control"><br>
         <span id="querry_error" style="display: none;margin-top:40px;" class="alert alert-warning">查无此人！</span>
     </form>
