@@ -46,37 +46,37 @@
 
 （1）图书（Book）E-R图如图3.1：
 
-![](asserts/Book.png)
+![](assets/Book.png)
 
 <center><strong>图3.1</strong></center>
 
 （2）读者（user）E-R图如图3.2：
 
-![](asserts/Users.png)
+![](assets/Users.png)
 
 <center><strong>图3.2</strong></center>
 
 （3）借阅记录（borrow）E-R图如图3.3：
 
-![](asserts/Borrow.png)
+![](assets/Borrow.png)
 
 <center><strong>图3.3</strong></center>
 
 （5）出版社（Publisher）E-R图如图3.4：
 
-![](asserts/Publisher.png)
+![](assets/Publisher.png)
 
 <center><strong>图3.4</strong></center>
 
 （6）图书类别（BookType）E-R图如图3.5：
 
-![](asserts/BookType.png)
+![](assets/BookType.png)
 
 <center><strong>图3.5</strong></center>
 
 （7）各表之间的E-R图如图3.6：
 
-![](asserts/Tables.png)
+![](assets/Tables.png)
 
 <center><strong>图3.6</strong></center>图3.7
 
@@ -87,7 +87,7 @@
 2. 数据更新/删除
    更新/删除图书、更新/删除读者账号、更新/删除借阅记录
 3. 数据查询
-   查询图书信息、查询借阅记录、查询读者
+   查询图书信息、查询借阅记录、查询读者信息
 
 #### 3.1.3 数据项列表
 
@@ -175,16 +175,16 @@ mysql> desc Borrow;
 1. 一个$1:1$联系可以转换为一个独立的关系模式，也可以任意一端对应的关系模式合并。
 2. 一个$1:n$联系可以转换成一个独立的关系模式，也可以与n端对应的关系模式合并。
 3. 一个$m:n$联系转换成一个关系模式。
-4. 3或3个以上实体间的一个多联系可以转换成一个关系模式。
+4. $3$或$3$个以上实体间的一个多联系可以转换成一个关系模式。
 5. 具有相同码的关系模式可合并。
 
 #### 3.2.2 关系模型
 
-图书（ISBN，图书名称，图书类别，作者，图书位置，出版社）
-出版社（出版社ID，出版社名称）
-图书类别（图书类别ID，图书类别名称）
-图书记录（操作序列号，操作时间，操作类型，图书ID，读者ID）
-借阅记录（操作序列号，借阅时间，图书状态，归还时间，图书ID，借阅人ID）
+图书（**ISBN**，图书名称，图书类别，作者，图书位置，出版社）
+出版社（**出版社ID**，出版社名称）
+图书类别（**图书类别ID**，图书类别名称）
+图书记录（**操作序列号**，操作时间，操作类型，*图书ID*，*读者ID*）
+借阅记录（**操作序列号**，借阅时间，图书状态，归还时间，*图书ID*，*借阅人ID*）
 
 ### 3.3物理结构设计
 
@@ -307,7 +307,9 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 首先，在进入图书管理系统后，首次进入页面，会弹出有登录注册操作，若不进行登录注册操作，将无法执行任何操作，而在登录注册操作后，系统会拉取后台数据库的用户信息，根据用户信息来判断当前登录注册的用户身份，如：管理员，普通用户，并根据用户身份与用户数据开放对应权限的相关数据的展示与操作。
 
-![login](ExperimentReport.assets/login.png)
+![login](assets/login.png)
+
+![image-20220618133121263](assets/register.png)
 
 **核心代码**：
 
@@ -334,6 +336,26 @@ def user_login(request):
     else:
         messages.error(request, "请使用GET或POST请求数据")
         return redirect("/user/sign_in/")
+
+def user_register(request):
+    if request.method == 'POST':
+        user_register_form = UserRegisterForm(data=request.POST)
+        if user_register_form.is_valid():
+            new_user = user_register_form.save(commit=False)
+            new_user.set_password(user_register_form.cleaned_data['password1'])
+            new_user.save()
+            login(request, new_user)
+            messages.info(request, f"注册成功！你的账号ID为：{new_user.UserID}")
+        else:
+            messages.info(request, "注册表单输入有误。请重新输入~")
+        return redirect("/user/sign_in/")
+    elif request.method == 'GET':
+        user_register_form = UserRegisterForm()
+        context = {'form': user_register_form}
+        return render(request, 'static/SignUp.html', context)
+    else:
+        messages.error(request, "请使用GET或POST请求数据")
+        return redirect("/user/sign_in/")
 ```
 
 ### 4.3用户信息模块：
@@ -355,9 +377,9 @@ def user_login(request):
 
 在该模块中，我们实现了不定项条件查询，基于用户的现实不同需求，用户可以随意添加条件：当前用户id，用户名，昵称，电话，近几日登录，信用点大小范围并进行查询，且我们会根据当前用户的权限就行查找并返回结果，在其中用户名和昵称根据现实情况采用了不区分大小写的模糊查找，信用点的输入在前端部分做好了安全性检查，以减少后端工作量，最后采用表单post更新的方式以最快速度返回结果，并且不需进行路由跳转即可完成
 
-![userinfo-1](ExperimentReport.assets/userinfo-1.png)
+![userinfo-1](assets/userinfo-1.png)
 
-![userinfo-2](ExperimentReport.assets/userinfo-2.png)
+![userinfo-2](assets/userinfo-2.png)
 
 **核心代码**：
 
@@ -398,7 +420,7 @@ def user_profile_view(request):
 
 同上，在该模块中，我们也实现了不定项条件查询，基于用户的现实不同需求，用户可以随意添加条件：图书ISBN，书名，图书作者，图书类型，出版社名称并进行查询，且任何用户在该部分都具有对图书的完全查找权，不分离管理员权限，以加快前后端反应速度，以降低大批量数据查找的耗时，因该部分在现实意义上模糊搜索效果更好，所以，除了ISBN外，该部分的搜索条件，全部应用了不区分大小写的模糊查找，最后采用表单post更新的方式以最快速度返回结果，并且不需进行路由跳转即可完成
 
-![bm](ExperimentReport.assets/bm.png)
+![bm](assets/bm.png)
 
 **核心代码**：
 
@@ -452,7 +474,7 @@ def book_view(request):
 
 同上，在该模块中，我们也实现了不定项条件查询，基于用户的现实不同需求，用户可以随意添加条件：近几日借阅时间，图书状态，图书id，借阅人id并进行查询，因该部分数据涉及图书管理内部操作，故该部分只限管理员权限成员访问，且以上部分数据不适合使用模糊搜索，采用区分大小写的全字搜索就可搜索，时间上根据当前日期向前推进日期，最后采用表单post更新的方式以最快速度返回结果，并且不需进行路由跳转即可完成
 
-![brr-manage](ExperimentReport.assets/brr-manage.png)
+![brr-manage](assets/brr-manage.png)
 
 **核心代码**：
 
@@ -497,12 +519,52 @@ def show_recordings(request):
 
 同上，在该模块中，展示着全部存入数据库的出版社ID和名称，同时在该模块中我们可以添加、删除出版社信息
 
+**核心代码**：
+
+```python
+def publisher_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/sign/in/")
+    elif current_user.is_admin:
+        publishers = Publisher.objects.all()
+        return render(request, 'static/ManagePublisher.html', {
+            'isOffline': current_user.is_anonymous,
+            'publishers': publishers,
+            'isAdmin': current_user.is_admin
+        })
+    else:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/sign/in/")
+```
+
 ### 4.7图书种类管理模块：
 
 - BookTypeID: 主键，记录图书类别ID
 - book_type_name: 记录图书类别名称
 
-同上，在该模块中，展示着全部存入数据库的图书类别ID和名称，同时在该模块中我们可以添加、删除图书种类信息
+同上，在该模块中，展示着全部存入数据库的图书类别ID和名称，同时在该模块中我们可以添加、删除图书种类信息。
+
+**核心代码**：
+
+```python
+def booktype_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/sign/in/")
+    elif current_user.is_admin:
+        book_types = BookType.objects.all()
+        return render(request, 'static/ManageBookType.html', {
+            'isOffline': current_user.is_anonymous,
+            'booktypes': book_types,
+            'isAdmin': current_user.is_admin
+        })
+    else:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/sign/in/")
+```
 
 ### 4.8图书借阅管理模块：
 - ISBN: 主键，表示图书的ISBN
@@ -515,6 +577,25 @@ def show_recordings(request):
 
 同上，在该模块中，展示着全部存入数据库的图书信息，用户可在该模块中借阅图书，选择一本或以上图书后，输入借阅天数，若借阅成功则会出现借阅成功提示，同时图书的状态会由IN转变为OUT；借阅成功后会生成一个相对应的借阅记录。
 
+```python
+def order_book_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    else:
+        books = Book.objects.all().values(
+            'ISBN', 'book_name', 'author', 'location', 'status',
+            'book_type__book_type_name',
+            'publisher__publisher_name',
+        )
+        return render(request, 'static/OrderBook.html', {
+            'isOffline': current_user.is_anonymous,
+            'books': books,
+            'isAdmin': current_user.is_admin
+        })
+```
+
 ### 4.9用户管理模块：
 - UserID: 主键，表示当前用户的ID，具有独一性
 - Name: 系统给当前用户分配的用户名，可修改
@@ -526,6 +607,73 @@ def show_recordings(request):
 - max_borrow_count: 最大借阅数量
 
 这个模块是管理员页面才有的模块功能，在这个模块当中展示所有已存入数据库的用户信息，同时可以修改、删除用户；管理员可以查看已删除用户的相关信息，也可将已被删除的用户恢复；管理员也可以查找现有用户，且以上部分数据不适合使用模糊搜索，需要指定账户的信息，当多条件输入时，不同时符合多条件就无法查找信息。
+
+**核心代码**：
+
+```python
+def user_manage(request):
+    current_user = request.user
+    condition_u = dict()
+    condition_d = dict()
+    print(request.POST)
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    elif current_user.is_admin:
+        condition_u['is_active'] = True
+        condition_d['is_active'] = False
+    else:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    try:
+        user_id = request.POST['user_id']
+        user_name = request.POST['user_name']
+        name = request.POST['name']
+        phone = request.POST['phone']
+        time = request.POST['time']
+        min_point = request.POST['min_point']
+        max_point = request.POST['max_point']
+        if user_id:
+            condition_d['UserID'] = int(user_id)
+            condition_u['UserID'] = int(user_id)
+        if user_name:
+            condition_d["name__icontains"] = user_name
+            condition_u["name__icontains"] = user_name
+        if name:
+            condition_u["nickname__icontains"] = name
+            condition_d["nickname__icontains"] = name
+        if phone:
+            condition_d["tel"] = phone
+            condition_u["tel"] = phone
+        if time:
+            now = datetime.datetime.now()
+            end = now - datetime.timedelta(days=int(time))
+            condition_u["last_login__range"] = (end, now)
+            condition_d["last_login__range"] = (end, now)
+        if min_point:
+            condition_d["trustworthiness__gte"] = int(min_point)
+            condition_u["trustworthiness__gte"] = int(min_point)
+        if max_point:
+            condition_d["trustworthiness__lte"] = int(max_point)
+            condition_u["trustworthiness__lte"] = int(max_point)
+    except Exception as e:
+        print(e)
+    users = User.objects.filter(**condition_u).values(
+        'UserID', 'name', 'nickname', 'tel',
+        'is_active', 'last_login', 'trustworthiness',
+        'max_borrow_day', 'max_borrow_count')
+    # print(users)
+    del_users = User.objects.filter(**condition_d).values(
+        'UserID', 'name', 'nickname', 'tel',
+        'is_active', 'last_login', 'trustworthiness',
+        'max_borrow_day', 'max_borrow_count')
+    return render(request, 'static/ManageUsers.html', {
+        'isOffline': current_user.is_anonymous,
+        'active_users': users,
+        'inactive_users': del_users,
+        'isAdmin': current_user.is_admin
+    })
+```
 
 ## 5.测试
 
