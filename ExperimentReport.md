@@ -490,6 +490,13 @@ def show_recordings(request):
         'isAdmin': current_user.is_admin
     })
 ```
+### 4.6出版社管理模块：
+
+- PublisherID: 主键，记录出版社ID
+- publisher_name: 记录出版社名称
+
+同上，在该模块中，展示着全部存入数据库的出版社ID和名称，同时在该模块中我们可以添加、删除出版社信息
+
 
 ## 5.测试
 
