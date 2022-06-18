@@ -309,6 +309,33 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![login](ExperimentReport.assets/login.png)
 
+**核心代码**：
+
+```python
+def user_login(request):
+    if request.method == 'POST':
+        user_login_form = get_user_model()
+        if user_login_form:
+            data = request.POST
+            user = authenticate(username=data['username'], password=data['password'])
+            if user:
+                login(request, user)
+                messages.info(request, "登录成功!")
+                return redirect("/")
+            else:
+                messages.error(request, "账号或密码输入有误。请重新输入~")
+        else:
+            messages.error(request, "账号或密码输入不合法")
+        return redirect("/user/sign_in/")
+    elif request.method == 'GET':
+        user_login_form = UserLoginForm()
+        context = {'form': user_login_form}
+        return render(request, 'static/SignIn.html', context)
+    else:
+        messages.error(request, "请使用GET或POST请求数据")
+        return redirect("/user/sign_in/")
+```
+
 ### 4.3用户信息模块：
 
 在用户信息模块中，我们根据需求设计了表属性：
@@ -332,6 +359,31 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![userinfo-2](ExperimentReport.assets/userinfo-2.png)
 
+**核心代码**：
+
+```python
+def user_profile_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "您还未登录，请先登录！")
+        return redirect("/user/sign_in/")
+    elif current_user.is_admin:
+        user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel', 'last_login'
+        )
+    else:
+        user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel',
+            'last_login', 'trustworthiness',
+            'max_borrow_day', 'max_borrow_count',
+        )
+    return render(request, 'static/UserProfile.html', {
+        'isOffline': current_user.is_anonymous,
+        'User': user[0],
+        'isAdmin': current_user.is_admin
+    })
+```
+
 ### 4.4查询图书模块：
 
 在查询图书模块中，我们根据需求设计了表属性：
@@ -348,6 +400,47 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![bm](ExperimentReport.assets/bm.png)
 
+**核心代码**：
+
+```python
+def book_view(request):
+    current_user = request.user
+    conditions = dict()
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    elif not current_user.is_admin:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    try:
+        ISBN = request.POST['ISBN_book']
+        book_name = request.POST["bkn"]
+        author = request.POST["writer_name"]
+        book_type = request.POST["book_type"]
+        press = request.POST["press"]
+        if ISBN:
+            conditions['ISBN'] = ISBN
+        if book_name:
+            conditions['book_name__icontains'] = book_name
+        if author:
+            conditions['author__icontains'] = author
+        if book_type:
+            conditions["book_type__book_type_name__icontains"] = book_type
+        if press:
+            conditions['publisher__publisher_name__icontains'] = press
+    except Exception as e:
+        print(e)
+
+    books = Book.objects.filter(**conditions).values('ISBN', 'book_name', 'author', 'location', 'status',
+            'book_type__book_type_name',
+            'publisher__publisher_name')
+    return render(request, 'static/ManageBook.html', {
+        'isOffline': current_user.is_anonymous,
+        'books': books,
+        'isAdmin': current_user.is_admin
+    })
+```
+
 ### 4.5借阅记录访问模块：
 
 - OperationID: 主键，记录操作ID
@@ -357,9 +450,46 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 - book_id: 外键，记录借阅的图书id
 - user_id: 外键，记录借阅人的id
 
-   同上，在该模块中，我们也实现了不定项条件查询，基于用户的现实不同需求，用户可以随意添加条件：近几日借阅时间，图书状态，图书id，借阅人id并进行查询，因该部分数据涉及图书管理内部操作，故该部分只限管理员权限成员访问，且以上部分数据不适合使用模糊搜索，采用区分大小写的全字搜索就行搜索，时间上根据当前日期向前推进日期，最后采用表单post更新的方式以最快速度返回结果，并且不需进行路由跳转即可完成
+同上，在该模块中，我们也实现了不定项条件查询，基于用户的现实不同需求，用户可以随意添加条件：近几日借阅时间，图书状态，图书id，借阅人id并进行查询，因该部分数据涉及图书管理内部操作，故该部分只限管理员权限成员访问，且以上部分数据不适合使用模糊搜索，采用区分大小写的全字搜索就行搜索，时间上根据当前日期向前推进日期，最后采用表单post更新的方式以最快速度返回结果，并且不需进行路由跳转即可完成
 
 ![brr-manage](ExperimentReport.assets/brr-manage.png)
+
+**核心代码**：
+
+```python
+def show_recordings(request):
+    current_user = request.user
+    conditions = dict()
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    elif not current_user.is_admin:
+        user_id = int(request.session.get('_auth_user_id'))
+        conditions['user_id'] = user_id
+    try:
+        time = request.POST['time']
+        state = request.POST['state']
+        book = request.POST['book']
+        person = request.POST['person']
+        if time:
+            now = datetime.datetime.now()
+            end = now - datetime.timedelta(days=int(time))
+            conditions['borrow_time__range'] = (end, now)
+        if state != '不限':
+            conditions['status'] = state
+        if book:
+            conditions['book_id'] = book
+        if person:
+            conditions['user_id'] = person
+    except Exception as e:
+        print(e)
+    borrows = Borrow.objects.filter(**conditions).values()
+    return render(request, 'static/ManageBorrow.html', {
+        'isOffline': current_user.is_anonymous,
+        'borrows': borrows,
+        'isAdmin': current_user.is_admin
+    })
+```
 
 ## 5.测试
 
