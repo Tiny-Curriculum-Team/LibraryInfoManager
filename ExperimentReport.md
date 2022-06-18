@@ -309,6 +309,33 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![login](ExperimentReport.assets/login.png)
 
+**核心代码**：
+
+```python
+def user_login(request):
+    if request.method == 'POST':
+        user_login_form = get_user_model()
+        if user_login_form:
+            data = request.POST
+            user = authenticate(username=data['username'], password=data['password'])
+            if user:
+                login(request, user)
+                messages.info(request, "登录成功!")
+                return redirect("/")
+            else:
+                messages.error(request, "账号或密码输入有误。请重新输入~")
+        else:
+            messages.error(request, "账号或密码输入不合法")
+        return redirect("/user/sign_in/")
+    elif request.method == 'GET':
+        user_login_form = UserLoginForm()
+        context = {'form': user_login_form}
+        return render(request, 'static/SignIn.html', context)
+    else:
+        messages.error(request, "请使用GET或POST请求数据")
+        return redirect("/user/sign_in/")
+```
+
 ### 4.3用户信息模块：
 
 在用户信息模块中，我们根据需求设计了表属性：
@@ -332,6 +359,31 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![userinfo-2](ExperimentReport.assets/userinfo-2.png)
 
+**核心代码**：
+
+```python
+def user_profile_view(request):
+    current_user = request.user
+    if current_user.is_anonymous:
+        messages.info(request, "您还未登录，请先登录！")
+        return redirect("/user/sign_in/")
+    elif current_user.is_admin:
+        user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel', 'last_login'
+        )
+    else:
+        user = User.objects.filter(UserID=current_user.UserID).values(
+            'UserID', 'name', 'nickname', 'tel',
+            'last_login', 'trustworthiness',
+            'max_borrow_day', 'max_borrow_count',
+        )
+    return render(request, 'static/UserProfile.html', {
+        'isOffline': current_user.is_anonymous,
+        'User': user[0],
+        'isAdmin': current_user.is_admin
+    })
+```
+
 ### 4.4查询图书模块：
 
 在查询图书模块中，我们根据需求设计了表属性：
@@ -348,6 +400,47 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![bm](ExperimentReport.assets/bm.png)
 
+**核心代码**：
+
+```python
+def book_view(request):
+    current_user = request.user
+    conditions = dict()
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    elif not current_user.is_admin:
+        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    try:
+        ISBN = request.POST['ISBN_book']
+        book_name = request.POST["bkn"]
+        author = request.POST["writer_name"]
+        book_type = request.POST["book_type"]
+        press = request.POST["press"]
+        if ISBN:
+            conditions['ISBN'] = ISBN
+        if book_name:
+            conditions['book_name__icontains'] = book_name
+        if author:
+            conditions['author__icontains'] = author
+        if book_type:
+            conditions["book_type__book_type_name__icontains"] = book_type
+        if press:
+            conditions['publisher__publisher_name__icontains'] = press
+    except Exception as e:
+        print(e)
+
+    books = Book.objects.filter(**conditions).values('ISBN', 'book_name', 'author', 'location', 'status',
+            'book_type__book_type_name',
+            'publisher__publisher_name')
+    return render(request, 'static/ManageBook.html', {
+        'isOffline': current_user.is_anonymous,
+        'books': books,
+        'isAdmin': current_user.is_admin
+    })
+```
+
 ### 4.5借阅记录访问模块：
 
 - OperationID: 主键，记录操作ID
@@ -361,16 +454,46 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![brr-manage](ExperimentReport.assets/brr-manage.png)
 
-分模块进行设计，小组成员分着写这一部分，然后合在一起。
-这一个部分就是详细的将自己的系统详细设计与实现介绍清楚。设计就是画流程图之类，并配上文字说明。实现就是实现效果（截图）配上关键代码、文字说明是怎么做出来这样的结果的。
-结构可以灵活些，比如根据流程顺序分块介绍，比如根据用户分类的功能介绍。
-但是需要注意：（1）不能只有图和代码，必须有文字说明介绍（2）不能大段大段代码，只能是关键的代码。而且如果出现代码，那么必须有文字说明（不是代码上的注释）。（3）如果有用到设计模式的同学，这里可以好好的写写。。。。。。。。。。。
+**核心代码**：
+
+```python
+def show_recordings(request):
+    current_user = request.user
+    conditions = dict()
+    if current_user.is_anonymous:
+        messages.info(request, "由于您还未登录，故访问被拒绝！")
+        return redirect("/user/sign_in/")
+    elif not current_user.is_admin:
+        user_id = int(request.session.get('_auth_user_id'))
+        conditions['user_id'] = user_id
+    try:
+        time = request.POST['time']
+        state = request.POST['state']
+        book = request.POST['book']
+        person = request.POST['person']
+        if time:
+            now = datetime.datetime.now()
+            end = now - datetime.timedelta(days=int(time))
+            conditions['borrow_time__range'] = (end, now)
+        if state != '不限':
+            conditions['status'] = state
+        if book:
+            conditions['book_id'] = book
+        if person:
+            conditions['user_id'] = person
+    except Exception as e:
+        print(e)
+    borrows = Borrow.objects.filter(**conditions).values()
+    return render(request, 'static/ManageBorrow.html', {
+        'isOffline': current_user.is_anonymous,
+        'borrows': borrows,
+        'isAdmin': current_user.is_admin
+    })
+```
 
 ## 5.测试
 
 ### （1）功能测试
-
-根据需求，将系统分为多个场景，以场景为主线，结合等价类划分、边界值分析等等设计测试用例，进行测试。测试发现问题，进行修改，修改后进行回归测试。。。。。。。。
 （1）登录：
 1. 输入正确的账号密码，是否正确登录并跳转至主页面。
 2. 账号为空，输入密码，是否提示输入密码。
@@ -378,25 +501,22 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 4. 账号密码均为空，是否提示请输入用户名/密码。
 5. 账号或密码不正确，是否提示账号或用户名错误。
 6. 点击注册账号，是否跳转到对应页面。
+7. 点击登出账号，是否会出现登出失败\登出成功的提示。
+
 
 （2）新增信息：
-
-1. 点击新增按钮,是否弹出新增的各个信息。
-2. 学生管理中学生是否为必填项。
-3. 班级管理中班级是否为必填项。
-4. 图书管理中图书是否为必填项。
-5. 借阅管理中借阅时间，图书，学生是否为必填项。
-6. 新增成功后,是否可以正常退出弹出框。
-7. 新增成功后,是否提示操作成功。
+1. 点击新增图书\用户\借阅记录,是否弹出新增的各个信息。
+2. 新增成功后,是否可以正常退出弹出框。
+3. 新增成功后,是否提示操作成功。
 
 （3）修改信息：
-
 1. 选中一条信息,是否弹出修改提示框。
 2. 修改完成,点击提交,提示操作成功。
 3. 修改完成,点击关闭,是否取消修改退出弹出框。
 4. 选中多条信息,修改按钮无法点击。
-5. 未选中学生信息,修改按钮无法点击。
-6. 是否姓名\ID等信息都可以正常修改。
+5. 是否姓名\ID等信息都可以正常修改。
+6. 如果修改信息，没有首先查询ID等主键，则提示输入。
+7. 
 
 （4）删除信息： 
 1. 选中一条或者多条,是否弹出删除框。
@@ -407,18 +527,15 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ### （2）web开发
 兼容性测试：
-
 1. 浏览器兼容测试：在不同浏览器如Microsoft Edge、Google Chrome、百度浏览器、火狐浏览器、夸克、qq浏览器等常见浏览器中能够正常运行，功能正常使用
 2. 屏幕尺寸和分辨率兼容测试：前端使用bootstrap框架栅格系统和flex布局使得页面具有更高的兼容性，pc端缩小屏幕后页面布局基本不变。由于未使用并不考虑移动端开发，当切换至移动端时页面内容会变小。页面板在分辨率模式分别为1280 * 1024、1027 * 768、800 * 600等常见分辨率中能正常显示，字体符合要求。
 3. 操作系统兼容测试：程序在windows和linux两个不同的系统中能正常运行，功能正常使用，显示正常。
 4. 服务端测试：将数据库建立在本地与服务器上，修改配置后，功能正常使用，页面与布局基本不变。
 
 性能测试：
-
 1. 预期性能测试：用户点击跳转时实现新页面跳转，跳转加载速度不低于2.29秒
 2. 用户并发测试：通过逐渐增加用户数量来加重系统负担，对用户并发进行压力测试。系统可承受十位用户以内的并发请求。当多用户都同时进入搜索时，我们将虚拟用户数据库数量进行并发用户数执行时间思考：100 100000 搜索页面随机产生30分钟加入思考时间，100 200000 搜索页面随机产生30分钟加入思考时间。一定数据库数量级，不同量虚拟用户的情况下，搜索结果是在将符合条件的所有结果集均发送到前台页面，对于页面显示对性能的消耗可以忽略不计。
 
-## 6  存在的问题及改进思路
 ### (3)安全性测试
 1. 如果有SQL注入,是否可以正常操作。
 2. 单次操作是否会保存记录。
