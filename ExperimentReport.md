@@ -64,19 +64,19 @@
 
 <center><strong>图3.3</strong></center>
 
-（5）出版社（Publisher）E-R图如图3.4：
+（4）出版社（Publisher）E-R图如图3.4：
 
 ![](assets/Publisher.png)
 
 <center><strong>图3.4</strong></center>
 
-（6）图书类别（BookType）E-R图如图3.5：
+（5）图书类别（BookType）E-R图如图3.5：
 
 ![](assets/BookType.png)
 
 <center><strong>图3.5</strong></center>
 
-（7）各表之间的E-R图如图3.6：
+（6）各表之间的E-R图如图3.6：
 
 ![](assets/Tables.png)
 
