@@ -25,8 +25,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    UserID = models.AutoField(primary_key=True, auto_created=True, editable=False)
-    name = models.CharField(max_length=40)
+    UserID = models.AutoField(primary_key=True, auto_created=True, editable=False, db_index=True)
+    name = models.CharField(max_length=40, db_index=True)
     nickname = models.CharField(max_length=20)
     password = models.CharField(max_length=1024)
     tel = models.CharField(max_length=11)
