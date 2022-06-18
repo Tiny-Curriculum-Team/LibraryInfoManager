@@ -309,7 +309,7 @@ python Django/manage.py createsuperuser --UserID 0 --name root --nickname root -
 
 ![login](assets/login.png)
 
-![image-20220618133121263](assets/register.png)
+![image-20220618135511163](assets/image-20220618135511163.png)
 
 **核心代码**：
 
@@ -519,24 +519,37 @@ def show_recordings(request):
 
 同上，在该模块中，展示着全部存入数据库的出版社ID和名称，同时在该模块中我们可以添加、删除出版社信息
 
-**核心代码**：
+![pubm](assets/pubm.png)
+
+**核心代码：**
 
 ```python
-def publisher_view(request):
-    current_user = request.user
-    if current_user.is_anonymous:
-        messages.info(request, "由于您还未登录，故访问被拒绝！")
-        return redirect("/sign/in/")
-    elif current_user.is_admin:
-        publishers = Publisher.objects.all()
-        return render(request, 'static/ManagePublisher.html', {
-            'isOffline': current_user.is_anonymous,
-            'publishers': publishers,
-            'isAdmin': current_user.is_admin
-        })
-    else:
-        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
-        return redirect("/sign/in/")
+def add_publisher(request):
+    if request.method == 'POST':
+        data = request.POST['addPublisher']
+        types = data.split(';')
+        for book_type in types:
+            if book_type == '':
+                continue
+            item = Publisher(publisher_name=book_type)
+            item.save()
+        messages.info(request, "出版社添加成功！")
+    return redirect("/pubm/")
+ def remove_publisher(request):
+    if request.method == 'POST':
+        data = request.POST['delPublisher']
+        types = data.split(';')
+        for to_del in types:
+            if to_del == '':
+                continue
+            try:
+                item = Publisher.objects.get(PublisherID=to_del)
+                item.delete()
+            except:
+                messages.info(request, "出版社删除失败！可能原因是已经删除或者不存在该出版社！")
+                return redirect("/pubm/")
+        messages.info(request, "出版社删除成功！")
+        return redirect("/pubm/")
 ```
 
 ### 4.7图书种类管理模块：
@@ -566,7 +579,44 @@ def booktype_view(request):
         return redirect("/sign/in/")
 ```
 
-### 4.8图书借阅管理模块：
+![btm](assets/btm.png)
+
+**核心代码：**
+
+```python
+def add_book_type(request):
+    if request.method == 'POST':
+        data = request.POST['addType']
+        types = data.split(';')
+        for book_type in types:
+            if book_type == '':
+                continue
+            item = BookType(book_type_name=book_type)
+            item.save()
+        messages.info(request, "图书种类添加成功！")
+    return redirect("/btm/")
+
+
+def remove_book_type(request):
+    if request.method == 'POST':
+        data = request.POST['delType']
+        types = data.split(';')
+        for to_del in types:
+            if to_del == '':
+                continue
+            try:
+                item = BookType.objects.get(BookTypeID=to_del)
+                item.delete()
+            except:
+                messages.info(request, "图书种类删除失败！可能原因是已经删除或者不存在该类！")
+                return redirect("/btm/")
+        messages.info(request, "图书种类删除成功！")
+        return redirect("/btm/")
+```
+
+
+
+### 4.8用户图书借阅管理模块：
 - ISBN: 主键，表示图书的ISBN
 - book_name: 表示图书的名称
 - Author: 图书对应作者的名字
@@ -577,23 +627,35 @@ def booktype_view(request):
 
 同上，在该模块中，展示着全部存入数据库的图书信息，用户可在该模块中借阅图书，选择一本或以上图书后，输入借阅天数，若借阅成功则会出现借阅成功提示，同时图书的状态会由IN转变为OUT；借阅成功后会生成一个相对应的借阅记录。
 
+![brr-order](assets/brr-order.png)
+
+**核心代码：**
+
 ```python
-def order_book_view(request):
-    current_user = request.user
-    if current_user.is_anonymous:
-        messages.info(request, "由于您还未登录，故访问被拒绝！")
-        return redirect("/user/sign_in/")
+@receiver(post_save, sender=Borrow)
+def trigger_update_book_status(sender, instance, **kwargs):
+    book_item = Book.objects.get(ISBN=instance.book_id)
+    if instance.status == '归还' or instance.status == '损坏':
+        book_item.status = 'IN'
     else:
-        books = Book.objects.all().values(
-            'ISBN', 'book_name', 'author', 'location', 'status',
-            'book_type__book_type_name',
-            'publisher__publisher_name',
-        )
-        return render(request, 'static/OrderBook.html', {
-            'isOffline': current_user.is_anonymous,
-            'books': books,
-            'isAdmin': current_user.is_admin
-        })
+        book_item.status = 'OUT'
+    book_item.save()
+
+    user_id = instance.user_id
+    user = User.objects.get(UserID=user_id)
+    if instance.status == '归还' and user.trustworthiness < 100:
+        user.trustworthiness += 1
+    elif instance.status == '损坏' and user.trustworthiness > 0:
+        user.trustworthiness -= 25
+    elif instance.status == '丢失' and user.trustworthiness > 0:
+        user.trustworthiness -= 50
+    elif instance.status == '迟交' and user.trustworthiness > 0:
+        user.trustworthiness -= 10
+    user.trustworthiness = max(0, user.trustworthiness)
+
+    user.max_borrow_day = int(user.trustworthiness / 100 * settings.MAX_BORROW_DAY)
+    user.max_borrow_count = int(user.trustworthiness / 100 * settings.MAX_BORROW_COUNT)
+    user.save()
 ```
 
 ### 4.9用户管理模块：
@@ -608,71 +670,70 @@ def order_book_view(request):
 
 这个模块是管理员页面才有的模块功能，在这个模块当中展示所有已存入数据库的用户信息，同时可以修改、删除用户；管理员可以查看已删除用户的相关信息，也可将已被删除的用户恢复；管理员也可以查找现有用户，且以上部分数据不适合使用模糊搜索，需要指定账户的信息，当多条件输入时，不同时符合多条件就无法查找信息。
 
-**核心代码**：
+![user-manage](assets/user-manage.png)
+
+**核心代码：**
 
 ```python
-def user_manage(request):
-    current_user = request.user
-    condition_u = dict()
-    condition_d = dict()
-    print(request.POST)
-    if current_user.is_anonymous:
-        messages.info(request, "由于您还未登录，故访问被拒绝！")
-        return redirect("/user/sign_in/")
-    elif current_user.is_admin:
-        condition_u['is_active'] = True
-        condition_d['is_active'] = False
-    else:
-        messages.info(request, "由于您还不是管理员，故访问被拒绝！")
-        return redirect("/user/sign_in/")
-    try:
-        user_id = request.POST['user_id']
-        user_name = request.POST['user_name']
-        name = request.POST['name']
-        phone = request.POST['phone']
-        time = request.POST['time']
-        min_point = request.POST['min_point']
-        max_point = request.POST['max_point']
-        if user_id:
-            condition_d['UserID'] = int(user_id)
-            condition_u['UserID'] = int(user_id)
-        if user_name:
-            condition_d["name__icontains"] = user_name
-            condition_u["name__icontains"] = user_name
-        if name:
-            condition_u["nickname__icontains"] = name
-            condition_d["nickname__icontains"] = name
-        if phone:
-            condition_d["tel"] = phone
-            condition_u["tel"] = phone
-        if time:
-            now = datetime.datetime.now()
-            end = now - datetime.timedelta(days=int(time))
-            condition_u["last_login__range"] = (end, now)
-            condition_d["last_login__range"] = (end, now)
-        if min_point:
-            condition_d["trustworthiness__gte"] = int(min_point)
-            condition_u["trustworthiness__gte"] = int(min_point)
-        if max_point:
-            condition_d["trustworthiness__lte"] = int(max_point)
-            condition_u["trustworthiness__lte"] = int(max_point)
-    except Exception as e:
-        print(e)
-    users = User.objects.filter(**condition_u).values(
-        'UserID', 'name', 'nickname', 'tel',
-        'is_active', 'last_login', 'trustworthiness',
-        'max_borrow_day', 'max_borrow_count')
-    # print(users)
-    del_users = User.objects.filter(**condition_d).values(
-        'UserID', 'name', 'nickname', 'tel',
-        'is_active', 'last_login', 'trustworthiness',
-        'max_borrow_day', 'max_borrow_count')
-    return render(request, 'static/ManageUsers.html', {
-        'isOffline': current_user.is_anonymous,
-        'active_users': users,
-        'inactive_users': del_users,
-        'isAdmin': current_user.is_admin
-    })
+def remove_user(request):
+    if request.method == "POST":
+        user_operated_id = request.POST['del_UserID']
+        if user_operated_id == '1':
+            messages.info(request, "用户删除失败，超级管理员不能被删除！")
+        else:
+            user = User.objects.get(UserID=user_operated_id)
+            if user:
+                user.is_active = False
+                user.save()
+                messages.info(request, "用户删除成功！")
+            else:
+                messages.info(request, "用户删除失败，可能原因是已经删除或者不存在该用户！")
+        return redirect("/user/manage/")
+
+
+def restore_user(request):
+    if request.method == "POST":
+        user_operated_id = request.POST['del_UserID']
+        if User.objects.filter(UserID=user_operated_id).exists():
+            user = User.objects.get(UserID=user_operated_id)
+            user.is_active = True
+            user.save()
+            messages.info(request, "用户恢复成功！")
+        else:
+            messages.info(request, "用户恢复失败，可能原因是已经恢复或者不存在该用户！")
+        return redirect("/user/manage/")
+
+
+def pull_query_user_info(request):
+    if request.method == "GET":
+        pull_UserID = request.GET['pull_UserID']
+        query_obj = User.objects.filter(UserID=pull_UserID)
+        if query_obj.exists():
+            query_data = query_obj.values()[0]
+            data = {
+                "name": query_data["name"],
+                "nickname": query_data["nickname"],
+                "tel": query_data["tel"],
+            }
+            return JsonResponse(data)
+        else:
+            return JsonResponse({})
+
+
+def update_user(request):
+    if request.method == "POST":
+        post_data = request.POST
+        user_to_update = User.objects.get(UserID=int(post_data['UserID']))
+        if post_data['update_user_password'] == '':
+            pass
+        else:
+            user_to_update.set_password(post_data['update_user_password'])
+        user_to_update.nickname = post_data['update_user_nickname']
+        user_to_update.name = post_data['update_user_name']
+        user_to_update.tel = post_data['update_user_telephone']
+        user_to_update.save()
+        messages.info(request, "用户信息修改成功！")
+    return redirect("/user/manage/")
 ```
 
 ## 5.测试
@@ -680,35 +741,73 @@ def user_manage(request):
 ### （1）功能测试
 （1）登录：
 1. 输入正确的账号密码，是否正确登录并跳转至主页面。
+
 2. 账号为空，输入密码，是否提示输入密码。
+
 3. 输入账号，密码为空，是否提示输入用户名。
+
 4. 账号密码均为空，是否提示请输入用户名/密码。
+
 5. 账号或密码不正确，是否提示账号或用户名错误。
+
 6. 点击注册账号，是否跳转到对应页面。
+
 7. 点击登出账号，是否会出现登出失败/登出成功的提示。
+
+   ![teat-login](assets/teat-login-16555299411361.png)
+
+   ![test-loginup](assets/test-loginup.png)
+
+![test-success](assets/test-success.png)
 
 
 （2）新增信息：
 1. 点击新增图书/用户/借阅记录,是否弹出新增的各个信息。
+
 2. 新增成功后,是否提示操作成功。
+
 3. 新增成功后，刷新页面是否会出现新增信息。
+
+   ![add-sucess](assets/add-sucess.png)
+
+   ![add](assets/add.png)
 
 （3）修改信息：
 1. 选中一条信息,点击修改，是否弹出修改框。
+
 2. 修改完成,点击提交,是否提示操作成功。
+
 3. 修改完成,点击关闭,页面信息是否修改成功。
+
 4. 如果修改信息，没有首先查询ID等主键，则提示输入。
+
+   ![search-su](assets/search-su.png)
+
+   ![serch-success](assets/serch-success.png)
 
 （4）删除信息： 
 1. 选中一条或者多条，点击删除，是否提示删除成功。
+
 2. 删除图书\账号\借阅记录，如果没有输入相关要删除的ID，是否会出现提示框。
+
 3. 选中一条或多条信息,点击取消按钮,是否可以取消删除。
+
+   ![del-pub](assets/del-pub.png)
+
+   ![del-success](assets/del-success.png)
 
 （5）查询信息：
 1. 点击查询按钮，是否会出现查找的信息输入框。
+
 2. 如果没有输入要查找的信息，是否会出现提示框。
+
 3. 不存在输入的相关信息，是否会出现不存在的提示框。
+
 4. 输入存在的信息，是否会在界面展示要查找的信息。
+
+   ![find](assets/find.png)
+
+   ![find-success](assets/find-success.png)
 
 ### （2）web开发
 兼容性测试：
